@@ -14,7 +14,8 @@ class SoftwareController extends Controller{
     public function index(){        
         abort_unless(\Gate::allows('software_access'), 403);//Comparar si tiene permisos
         $softwares = Software::all();
-        return view('admin.softwares.index', compact('softwares'));
+         $notificacion = '';
+        return view('admin.softwares.index', compact('softwares','notificacion' ));
     }
 
      public function show(Software $software){
@@ -48,11 +49,8 @@ class SoftwareController extends Controller{
         
         $software = Software::create($request->all());
         $softwares = Software::all();
-        $notificacion = array(
-            'message' => 'Clientes agregados con exito.', 
-            'alert-type' => 'success'
-        );
-        return view('admin.softwares.index', compact('softwares', 'notificacion'));
+        $notificacion = '';
+        return view('admin.softwares.index', compact('softwares','notificacion' ));
     }
 
     public function edit(Software $software){
@@ -66,17 +64,20 @@ class SoftwareController extends Controller{
         $request["user_id"]=auth()->user()->id;   
           $validator = Validator::make($request->all(), [
            'nombre' => 'required|string|max:255',
-            'tipos_id' => 'required',
+            'tipo_id' => 'required',
             'descripcion' => 'required|string|max:255445',
             'user_id' => 'required',
          ]);
+        if ($validator->fails()) {        
+            return redirect()
+                        ->route('admin.softwares.edit', $software)
+                        ->withErrors($validator)
+                        ->withInput();
+            }
         $software->update($request->all());
         $softwares = Software::all();
-        $notificacion = array(
-            'message' => 'Usuario creado con exito.', 
-            'alert-type' => 'success'
-        );
-        return view('admin.softwares.index', compact('softwares', 'notificacion'));
+         $notificacion = '';
+        return view('admin.softwares.index', compact('softwares','notificacion' ));
     }
 
    
@@ -84,19 +85,15 @@ class SoftwareController extends Controller{
     public function destroy(Software $software){
         abort_unless(\Gate::allows('software_delete'), 403);
         $software->delete();       
-        $notificacion = array(
-            'message' => 'Usuario eliminado con exito.', 
-            'alert-type' => 'Danger'
-        );
-        return redirect()->back()->with($notificacion);
+        $softwares = Software::all();
+         $notificacion = 'Elemento Eliminado con Exito';
+        return view('admin.softwares.index', compact('softwares','notificacion' ));
     }
 
     public function massDestroy(MassDestroySoftwareRequest $request){
         Software::whereIn('id', request('ids'))->delete();
-        $notificacion = array(
-            'message' => 'Usuarios Eliminados con exito.', 
-            'alert-type' => 'Danger'
-        );
-        return redirect()->back()->with($notificacion);
+        $softwares = Software::all();
+         $notificacion = 'Elementos Eliminadoscon exito';
+        return view('admin.softwares.index', compact('softwares','notificacion' ));
     }
 }

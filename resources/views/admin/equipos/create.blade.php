@@ -3,58 +3,47 @@
 @extends('layouts.admin')
 @section('content')
 
-
+<div class="breadcrumb">
+      @component('partials.widget.breadcrumb')
+        <li class="breadcrumb-item"><a href='{{ route("admin.equipos.index") }}'>Equipos</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Agregar Nuevo Equipo </li>
+          
+      @endcomponent
+  </div>
 <div class="card">
+    <div class="card-header">
+          <h5 class="text-center ">AGREGAR UN EQUIPO</h5>
+    </div>
     <div class="card-body">
-        <h5 class="text-center mb-5">DATOS DEL EQUIPO.</h5>
+       
         <form action="{{ route('admin.equipos.store') }}" method="POST" class="container-fluid" enctype="multipart/form-data">
             @csrf
         <div class="row">
              
             <div class="form-group {{ $errors->has('identificador') ? 'has-error' : '' }} col-12 col-md-6">
                 <label for="identificador2">Identificador:*</label>
-                <input type="text" id="identificador" name="identificador" class="form-control" value="{{ old('identificador') }}">
-                @if($errors->has('identificador'))
-                    <p class="help-block">
-                        {{ $errors->first('identificador') }}
-                    </p>
-                @endif                
+                <input type="text" id="identificador" name="identificador" class="form-control{{ $errors->has('nombre') ? ' is-invalid' : '' }}" value="{{ old('identificador') }}">
+                               
             </div> 
              <div class="form-group {{ $errors->has('nombre') ? 'has-error' : '' }} col-12 col-md-6">
                 <label for="nombre2">Nombre:*</label>
-                <input type="text" id="nombre2" name="nombre" class="form-control" value="{{ old('nombre') }}">
-                @if($errors->has('nombre'))
-                    <p class="help-block">
-                        {{ $errors->first('nombre') }}
-                    </p>
-                @endif                
+                <input type="text" id="nombre2" name="nombre" class="form-control{{ $errors->has('nombre') ? ' is-invalid' : '' }}" value="{{ old('nombre') }}">
+                              
             </div> 
              <div class="form-group {{ $errors->has('marca') ? 'has-error' : '' }} col-12 col-md-4">
                 <label for="marca2">Marca:*</label>
-                <input type="text" id="marca2" name="marca" class="form-control" value="{{ old('marca') }}">
-                @if($errors->has('marca'))
-                    <p class="help-block">
-                        {{ $errors->first('marca') }}
-                    </p>
-                @endif                
+                <input type="text" id="marca2" name="marca" class="form-control{{ $errors->has('nombre') ? ' is-invalid' : '' }}" value="{{ old('marca') }}">
+                               
             </div> 
              <div class="form-group {{ $errors->has('modelo') ? 'has-error' : '' }} col-12 col-md-4">
                 <label for="modelo2">Modelo:*</label>
-                <input type="text" id="modelo2" name="modelo" class="form-control" value="{{ old('modelo') }}">
-                @if($errors->has('modelo'))
-                    <p class="help-block">
-                        {{ $errors->first('modelo') }}
-                    </p>
-                @endif                
+                <input type="text" id="modelo2" name="modelo" class="form-control{{ $errors->has('nombre') ? ' is-invalid' : '' }}" value="{{ old('modelo') }}">
+                               
             </div> 
              <div class="form-group {{ $errors->has('serial') ? 'has-error' : '' }} col-12 col-md-4">
                 <label for="serial2">Serial:*</label>
-                <input type="text" id="serial2" name="serial" class="form-control" value="{{ old('serial') }}">
-                @if($errors->has('serial'))
-                    <p class="help-block">
-                        {{ $errors->first('serial') }}
-                    </p>
-                @endif                
+                <input type="text" id="serial2" name="serial" class="form-control{{ $errors->has('nombre') ? ' is-invalid' : '' }}" value="{{ old('serial') }}">
+                                
             </div> 
             <div class="form-group {{ $errors->has('tipo')}} col-12">
                 <label for="tipo" class=" col-form-label text-md-right">Tipo:*</label>
@@ -63,6 +52,19 @@
                     <select class="form-control{{ $errors->has('tipo') ? ' is-invalid' : '' }} " name="tipo_id" style="width: 100%;" tabindex="-1" aria-hidden="true">
                          @foreach($tipos as $tipo)
                             <option value="{{$tipo->id}}">{{$tipo->nombre}}</option>
+                        @endforeach
+                      
+                      </select>
+                    
+                </div>
+            </div> 
+             <div class="form-group {{ $errors->has('tipo')}} col-12">
+                <label for="tipo" class=" col-form-label text-md-right">Dependencia:*</label>
+                <div class="">   
+                 
+                    <select class="form-control{{ $errors->has('dependencia') ? ' is-invalid' : '' }} " name="dependencia_id" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                         @foreach($dependencias as $dependencia)
+                            <option value="{{$dependencia->id}}">{{$dependencia->nombre}}</option>
                         @endforeach
                       
                       </select>
@@ -80,11 +82,7 @@
                         </option>
                     @endforeach
                 </select>
-                @if($errors->has('softwares'))
-                    <p class="help-block">
-                        {{ $errors->first('softwares') }}
-                    </p>
-                @endif
+                
                
             </div>
              <div class="form-group {{ $errors->has('perifericos') ? 'has-error' : '' }} col-12">
@@ -98,11 +96,7 @@
                         </option>
                     @endforeach
                 </select>
-                @if($errors->has('perifericos'))
-                    <p class="help-block">
-                        {{ $errors->first('perifericos') }}
-                    </p>
-                @endif
+              
                
             </div>
             <div class="form-group {{ $errors->has('perteneciente')}} col-12 col-md-6">
@@ -129,17 +123,13 @@
             </div>
             <div class="form-group {{ $errors->has('observacion') ? 'has-error' : '' }} col-12">
                 <label for="observacion">Observación:*</label>
-                <input type="text" id="observacion" name="observacion" class="form-control" value="{{ old('observacion') }}">
-                @if($errors->has('observacion'))
-                    <p class="help-block">
-                        {{ $errors->first('observacion') }}
-                    </p>
-                @endif                
+                <textarea type="text" id="observacion" name="observacion" class="form-control{{ $errors->has('nombre') ? ' is-invalid' : '' }}" value="{{ old('observacion') }}">{{ old('observacion') }}</textarea> 
+                             
             </div>               
         </div>
            
           <div  id="caracteristicas" class="d-none" >
-                    </div>
+          </div>
           
         <div class="table-responsive row">
              <h5 class="text-center my-5 col-12">CARACTERISTICAS DEL EQUIPO:</h5>
@@ -186,8 +176,15 @@
                 </tbody>
             </table>
         </div>         
-            <div>
-                <input class="btn btn-danger" type="submit" value="{{ trans('global.save') }}">
+        <!--*           Errores         -->
+            @include('partials.widget.errors')
+
+            <!--*      boton de envio   -->
+           <div class="col-12 d-flex justify-content-between">
+                <a class="btn btn-info" href="{{ route("admin.equipos.index") }}">
+                    Volver
+                </a>
+                <input class="btn btn-success" type="submit" value="Guardar">
             </div>
        
     </div>

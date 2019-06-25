@@ -1,10 +1,17 @@
 @extends('layouts.admin')
 @section('content')
-
+<div class="breadcrumb">
+      @component('partials.widget.breadcrumb')
+        <li class="breadcrumb-item"><a href="{{ route("admin.softwares.index") }}">Softwares</a></li>
+        <li class="breadcrumb-item active" > Software:  {{ $Software->nombre ?? '' }} </li>
+          
+      @endcomponent
+  </div>
 <div class="card">
-    <div class="card-header">
-        {{ trans('global.show') }} {{ trans('global.software.title') }}
+      <div class="card-header">
+          <h5 class="text-center ">DATOS DEL SOFTWARE</h5>
     </div>
+
 
     <div class="card-body">
         <table class="table table-bordered table-striped">
@@ -34,8 +41,8 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>
-                          {{ trans('global.software.fields.creacion') }} 
+                     <th>
+                           Fecha de creación:
                     </th>
                     <td>
                         {{ $software->created_at ?? '' }}
@@ -43,7 +50,7 @@
                 </tr>
                 <tr>
                     <th>
-                          {{ trans('global.software.fields.actualizacion') }} 
+                            Fecha de actualizacion:
                     </th>
                     <td>
                         {{ $software->updated_at ?? '' }}
@@ -54,5 +61,11 @@
         </table>
     </div>
 </div>
+<div class="col-12 d-flex justify-content-between">
+                <a class="btn btn-info" href="{{ route("admin.softwares.index") }}">
+                    Volver
+                </a>
+               
+            </div>
 
 @endsection

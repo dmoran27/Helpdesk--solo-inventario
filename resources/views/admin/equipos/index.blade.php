@@ -1,19 +1,31 @@
 @extends('layouts.admin')
 @section('content')
 
-@can('user_create')
-    <div style="margin-bottom: 10px;" class="row">
-        <div class="col-lg-12">
+ <div class="breadcrumb">
+      @component('partials.widget.breadcrumb')
+          <li class="breadcrumb-item active" aria-current="page"> Equipos </li>
+      @endcomponent
+  </div>
+
+@can('equipo_create')
+
+        <div class="">
             <a class="btn btn-success" href="{{ route("admin.equipos.create") }}">
-                {{ trans('global.add') }} {{ trans('global.equipo.title_singular') }}
+                Agregar Nuevo Equipo
             </a>
         </div>
-    </div>
+   
 @endcan
 <div class="card">
     <div class="card-header">
-        {{ trans('global.equipo.title_singular') }} {{ trans('global.list') }}
+          <h5 class="text-center ">Lista de Equipos</h5>
+
+
+
     </div>
+  
+  
+           
 
     <div class="card-body">
         <div class="table-responsive">
@@ -21,7 +33,7 @@
                 <thead>
                     <tr>
                         <th width="10">
-                            
+                            *
                         </th>
                          <th width="10">
                             #
@@ -57,7 +69,6 @@
                         
                         <th>
                             {{ trans('global.equipo.fields.acciones') }} 
-                            &nbsp;
                         </th>
                     </tr>
                 </thead>
@@ -96,21 +107,22 @@
                                 {{ $equipo->perteneciente ?? '' }}
                             </td>                                                        
                             <td>
-                                 @can('user_show')
-                                    <a class="btn btn-xs btn-success" href="{{ route('admin.equipos.show', $equipo->id) }}">
-                                        {{ trans('global.view') }}
+                                 @can('equipo_show')
+                                    <a class="btn btn-xs btn-success w-100" href="{{ route('admin.equipos.show', $equipo->id) }}">
+                                        Ver
                                     </a>
                                 @endcan
-                                @can('user_edit')
-                                    <a class="btn btn-xs btn-info" href="{{ route('admin.equipos.edit', $equipo) }}">
-                                        {{ trans('global.edit') }}
+                                @can('equipo_edit')
+                                    <a class="btn btn-xs btn-info w-100" href="{{ route('admin.equipos.edit', $equipo) }}">
+                                        Editar
                                     </a>
                                 @endcan
-                                @can('user_delete')
-                                    <form action="{{ route('admin.equipos.destroy', $equipo->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
+                                @can('equipo_delete')
+                                    <form action="{{ route('admin.equipos.destroy', $equipo->id) }}" method="POST" class="w-100 d-inline-block formularioEliminar" id="formularioEliminar{{$equipo->id}}" 
+                                      ">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
+                                        <button id="eliminar" class="btn w-100 btn-xs btn-danger eliminar" value="{{$equipo->id}}">Eliminar</button>
                                     </form>
                                 @endcan
                             </td>
@@ -118,6 +130,24 @@
                         </tr>
                     @endforeach
                 </tbody>
+                <tfoot>
+                    <tr><th>  </th><th> </th>
+                         <th> {{ trans('global.equipo.fields.identificador') }} </th>
+                        <th> {{ trans('global.equipo.fields.nombre') }} </th>
+                        <th> {{ trans('global.equipo.fields.modelo') }} </th>
+
+                        <th> {{ trans('global.equipo.fields.marca') }} </th>
+                        <th> {{ trans('global.equipo.fields.serial') }} </th>
+
+                          <th> {{ trans('global.equipo.fields.estado') }} </th>
+ <th> {{ trans('global.equipo.fields.tipo') }} </th>               
+                        <th> Perteneciente</th>
+                       
+                        
+                        
+                        <th> {{ trans('global.equipo.fields.acciones') }} </th> 
+                    </tr>
+                </tfoot>  
             </table>
         </div>
     </div>
@@ -126,60 +156,98 @@
 @section('scripts')
 @parent
 <script>
- 
-$( document ).ready(function() {
-     if('{{$notificacion}}' != ''){
-            swal({
-  position: 'top-end',
-  type: 'success',
-  title: '{{$notificacion}}',
-  icon: "success",
-  successMode: true,
-  showConfirmButton: false,
-  timer: 2500,
-})
-}
-
-}); $(function () {
-
-    
- });
+ $( document ).ready(function() {
+     
 
 
+//alerta de notificaciones al agregar un usuario
+ if('{{$notificacion}}' != ''){
+        swal({
+        position: 'top-end',
+        type: 'success',
+        title: '{{$notificacion}}',
+        icon: "success",
+        successMode: true,
+        showConfirmButton: false,
+        timer: 2500,
+      })
+    }
 
-    $(function () {
-  let deleteButtonTrans = 'Eliminar Seleccion'
+  $(function () {
+  //--------------------------------Boton para eliminar seleccion
+  
   let deleteButton = {
-    text: deleteButtonTrans,
+    text:'<i class="fa fa-trash"></i><span>Eliminar Seleccion</span>',
     url: "{{ route('admin.equipos.massDestroy') }}",
-    className: 'btn-danger',
+    className: 'btn-danger buttons-delete',
     action: function (e, dt, node, config) {
       var ids = $.map(dt.rows({ selected: true }).nodes(), function (entry) {
           return $(entry).data('entry-id')
       });
 
-      if (ids.length === 0) {
-        alert('{{ trans('global.datatables.zero_selected') }}')
-
+       if (ids.length === 0) {
+         swal("OJO!", "Elemento no existe!", "warning");
         return
       }
 
-      if (confirm('{{ trans('global.areYouSure') }}')) {
-        $.ajax({
-          headers: {'x-csrf-token': _token},
-          method: 'POST',
-          url: config.url,
-          data: { ids: ids, _method: 'DELETE' }})
-          .done(function () { location.reload() })
-      }
-    }
+       swal({
+      title: "Esta Seguro de Eliminar este elemento?",
+      text: "Una vez eliminado no podra recuperarlo!",
+      icon: "warning",
+      dangerMode: true,
+      buttons: {
+        cancel: {
+            text: "Cancelar",
+            visible:true
+        },
+        confirm: {
+            text: "Si"
+        }
+        }
+      }).then((willDelete) => {
+        if (willDelete) {
+            $.ajax({
+              headers: {'x-csrf-token': _token},
+              method: 'POST',
+              url: config.url,
+              data: { ids: ids, _method: 'DELETE' }
+            }).done(function () { 
+              swal({
+                position: 'top-end',
+                type: 'success',
+                title:  "Elemento Eliminado correctamente!",
+                icon: "success",
+                successMode: true,
+                showConfirmButton: false,
+                timer: 2500,
+              });
+
+
+
+            location.assign("{{ route('admin.equipos.index') }}").deley(3000) })
+        }
+    });
+  }
   }
   let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-@can('user_delete')
-  dtButtons.push(deleteButton)
-@endcan
 
-  $('.datatable:not(.ajaxTable)').DataTable({ buttons: dtButtons })
+  @can('equipo_delete')
+    dtButtons.push(deleteButton)
+  @endcan
+
+  //actualizar tabla al eliminar un elemento
+  $('.datatable:not(.ajaxTable)').DataTable({ buttons: dtButtons }).columns().every( function () {
+        var that = this;
+ 
+        $( 'input', this.footer() ).on( 'keyup change', function () {
+            if ( that.search() !== this.value ) {
+                that
+                    .search( this.value )
+                    .draw();
+            }
+        } );
+    } );
+  } );
 });
 
 </script>

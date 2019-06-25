@@ -2,31 +2,30 @@
 
 @extends('layouts.admin')
 @section('content')
-
-
+<div class="breadcrumb">
+      @component('partials.widget.breadcrumb')
+        <li class="breadcrumb-item"><a href='{{ route("admin.perifericos.index") }}'>Perifericos</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Agregar Nuevo Periferico </li>
+          
+      @endcomponent
+  </div>
 <div class="card">
+    <div class="card-header">
+          <h5 class="text-center ">AGREGAR UN PERIFERICO</h5>
+    </div>
     <div class="card-body">
-        <h5 class="text-center mb-5">DATOS DEL PERIFERICO.</h5>
         <form action="{{ route('admin.perifericos.store') }}" method="POST" class="container-fluid" enctype="multipart/form-data">
             @csrf
         <div class="row">
             <div class="form-group {{ $errors->has('nombre') ? 'has-error' : '' }} col-12 col-md-6">
                 <label for="nombre2">Nombre:*</label>
-                <input type="text" id="nombre2" name="nombre" class="form-control" value="{{ old('nombre') }}">
-                @if($errors->has('nombre'))
-                    <p class="help-block">
-                        {{ $errors->first('nombre') }}
-                    </p>
-                @endif                
+                <input type="text" id="nombre2" name="nombre" class="form-control{{ $errors->has('nombre') ? ' is-invalid' : '' }}" value="{{ old('nombre') }}">
+                             
             </div>   
             <div class="form-group {{ $errors->has('identificador') ? 'has-error' : '' }} col-12 col-md-6">
                 <label for="identificador2">identificador:*</label>
-                <input type="text" id="identificador" name="identificador" class="form-control" value="{{ old('identificador') }}">
-                @if($errors->has('identificador'))
-                    <p class="help-block">
-                        {{ $errors->first('identificador') }}
-                    </p>
-                @endif                
+                <input type="text" id="identificador" name="identificador" class="form-control{{ $errors->has('nombre') ? ' is-invalid' : '' }}" value="{{ old('identificador') }}">
+                               
             </div> 
             <div class="form-group {{ $errors->has('tipo')}} col-12">
                 <label for="tipo" class=" col-form-label text-md-right">Tipo:*</label>
@@ -65,12 +64,8 @@
             </div>
             <div class="form-group {{ $errors->has('observacion') ? 'has-error' : '' }} col-12">
                 <label for="observacion">Observación:*</label>
-                <input type="text" id="observacion" name="observacion" class="form-control" value="{{ old('observacion') }}">
-                @if($errors->has('observacion'))
-                    <p class="help-block">
-                        {{ $errors->first('observacion') }}
-                    </p>
-                @endif                
+                <textarea type="text" id="observacion" name="observacion" class="form-control" value="{{ old('observacion') }}">{{ old('observacion') }}</textarea> 
+                              
             </div>               
         </div>
            
@@ -122,8 +117,15 @@
                 </tbody>
             </table>
         </div>         
-            <div>
-                <input class="btn btn-danger" type="submit" value="{{ trans('global.save') }}">
+         <!--*           Errores         -->
+            @include('partials.widget.errors')
+
+            <!--*      boton de envio   -->
+           <div class="col-12 d-flex justify-content-between">
+                <a class="btn btn-info" href="{{ route("admin.perifericos.index") }}">
+                    Volver
+                </a>
+                <input class="btn btn-success" type="submit" value="Guardar">
             </div>
        
     </div>

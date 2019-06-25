@@ -1,9 +1,15 @@
 @extends('layouts.admin')
 @section('content')
-
+ <div class="breadcrumb">
+      @component('partials.widget.breadcrumb')
+        <li class="breadcrumb-item"><a href="{{ route("admin.equipos.index") }}">Equipos</a></li>
+        <li class="breadcrumb-item active" > Equipo:  {{ $equipo->nombre ?? '' }} </li>
+          
+      @endcomponent
+  </div>
 <div class="card">
-    <div class="card-header">
-        {{ trans('global.show') }} {{ trans('global.equipo.title') }}
+      <div class="card-header">
+          <h5 class="text-center ">DATOS DEL EQUIPO</h5>
     </div>
 
     <div class="card-body">
@@ -43,7 +49,7 @@
                 </tr>
                 <tr>
                     <th>
-                          {{ trans('global.equipo.fields.estado_equipo') }} 
+                         Estado del Equipo
                     </th>
                     <td>
                         {{ $equipo->estado_equipo ?? '' }}
@@ -67,7 +73,7 @@
                 </tr>
                 <tr>
                     <th>
-                          {{ trans('global.equipo.fields.creacion') }} 
+                        Fecha de creacion
                     </th>
                     <td>
                         {{ $equipo->created_at ?? '' }}
@@ -75,7 +81,7 @@
                 </tr>
                 <tr>
                     <th>
-                          {{ trans('global.equipo.fields.actualizacion') }} 
+                        Fecha de actualizacion
                     </th>
                     <td>
                         {{ $equipo->updated_at ?? '' }}
@@ -85,35 +91,32 @@
             </tbody>
         </table>
     </div>
-<div class="card-header">
-        {{ trans('global.caracteristicas.title') }}
+</div>
+<div class="card">
+     <div class="card-header">
+          <h5 class="text-center ">DATOS DE LAS CARACTERISTICAS DEL EQUIPO</h5>
     </div>
-    <div>
-         <table class="  table table-bordered table-striped table-hover datatable">
+    <div class="card-body">
+         <table class="table table-bordered table-striped table-hover datatable ">
                 <thead>
                     <tr>
-                        <th width="10">
-                            
-                        </th>
                          <th width="10">
                             #
                         </th>
                         
                         <th>
-                            {{ trans('global.caracteristicas.fields.nombre') }} 
+                           Nombre
                         </th>
                           <th>
-                            {{ trans('global.caracteristicas.fields.propiedad') }} 
+                            Propiedad 
                         </th>
                
-                        <th>
-                            {{ trans('global.caracteristicas.fields.observacion') }}
+                        
+                         <th>
+                            Fecha de Creacion
                         </th>
                          <th>
-                            {{ trans('global.caracteristicas.fields.creacion') }}
-                        </th>
-                         <th>
-                            {{ trans('global.caracteristicas.fields.actualizacion') }}
+                            Fecha de Actualizacion
                         </th>
                         
                         
@@ -147,36 +150,18 @@
                                 {{ $caracteristica->updated_at ?? '' }}
                             </td>
                                                         
-                            <!--td>
-                                 @can('user_show')
-                                    <a class="btn btn-xs btn-success" href="{{ route('admin.equipos.show', $equipo->id) }}">
-                                        {{ trans('global.view') }}
-                                    </a>
-                                @endcan
-                                @can('user_edit')
-                                    <a class="btn btn-xs btn-info" href="{{ route('admin.equipos.edit', $equipo) }}">
-                                        {{ trans('global.edit') }}
-                                    </a>
-                                @endcan
-                                @can('user_delete')
-                                    <form action="{{ route('admin.equipos.destroy', $equipo->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
-                                    </form>
-                                @endcan
-                            </td-->
-
                         </tr>
                     @endforeach
                 </tbody>
             </table>
     </div>
-    <div class="card-header">
-         {{ trans('global.equipo.title') }}
+</div>
+<div class="card">
+     <div class="card-header">
+          <h5 class="text-center ">PERIFERICOS ASOCIADOS</h5>
     </div>
-     <div>
-         <table class="  table table-bordered table-striped table-hover datatable">
+    <div class="card-body">
+         <table class="table table-bordered table-striped table-hover datatable ">
                 <thead>
                     <tr>
                         <th width="10">
@@ -190,17 +175,17 @@
                             {{ trans('global.periferico.fields.nombre') }} 
                         </th>
                           <th>
-                            {{ trans('global.periferico.fields.propiedad') }} 
+                            Propiedad
                         </th>
                
                         <th>
-                            {{ trans('global.periferico.fields.observacion') }}
+                            Observacion
                         </th>
                          <th>
-                            {{ trans('global.periferico.fields.creacion') }}
+                            Fecha de creacion
                         </th>
                          <th>
-                            {{ trans('global.periferico.fields.actualizacion') }}
+                            Fecha de actualizacion
                         </th>
                         
                         
@@ -261,5 +246,12 @@
     </div>
 </div>
 
+
+ <div class="col-12 d-flex justify-content-between">
+                <a class="btn btn-info" href="{{ route("admin.equipos.index") }}">
+                    Volver
+                </a>
+               
+            </div>
 
 @endsection

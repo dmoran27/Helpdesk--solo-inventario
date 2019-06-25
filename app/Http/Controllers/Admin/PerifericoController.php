@@ -105,7 +105,6 @@ class PerifericoController extends Controller{
 
         $array1=$periferico->caracteristicas()->get();
         $array2=$request->input('caracteristicas', []);
-        dd($array1);
         foreach ($array1 as $value1) {
             $encontrado=false;
             foreach ($array2 as $value2) {

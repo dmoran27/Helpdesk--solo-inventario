@@ -59,7 +59,7 @@
             </div>
             <div class="form-group {{ $errors->has('observacion') ? 'has-error' : '' }} col-12">
                 <label for="observacion">Observación:*</label>
-                <input type="text" id="observacion" name="observacion" class="form-control" value="{{ old('observacion', isset($periferico) ? $periferico->observacion : '') }}">
+                <textarea type="text" id="observacion" name="observacion" class="form-control" value="{{ old('observacion', isset($periferico) ? $periferico->observacion : '') }}">{{ old('observacion', isset($periferico) ? $periferico->observacion : '') }}</textarea> 
                                
             </div>               
         </div>
@@ -129,7 +129,7 @@
                             <td>
                                 <!--input type='button' value='Editar' class='update btn btn-xs w-100 btn-info' data-id='id' --><input type='button' class='btn btn-xs w-100 btn-danger delete' value='Eliminar  ' data-id='{{$caracteristica->id}}' >
                             </td>
-                    </tr>;
+                    </tr>
                         @endforeach
 
                   
@@ -144,7 +144,7 @@
             @include('partials.widget.errors')
        
           <div class="col-12 d-flex justify-content-between">
-                <a class="btn btn-info" href="{{ route("admin.clientes.index") }}">
+                <a class="btn btn-info" href="{{ route("admin.perifericos.index") }}">
                     Volver
                 </a>
                 <input class="btn btn-danger" type="submit" value="Actualizar">
@@ -160,7 +160,6 @@
 
     <script type='text/javascript'>
    
-$(document).ready(function(){  
       // Fetch records
       //fetchRecords();
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
@@ -183,30 +182,35 @@ $(document).ready(function(){
                     if(findnorecord > 0){
                       $('#userTable tr.norecord').remove();
                     }
-                    var tr_str = "<tr data-entry-id='"+id+"'><td><input type='hidden' value="+id+"  /></td><td><input type='text'  class='nombre  d-none w-100' id='nombre-"+id+"' value="+nombre+" placeholder='Marca, Modelo, color, puerto, ...''><p class=''>"+nombre+"</p></td><td><input type='text'  class='propiedad  d-none w-100' id='propiedad-"+id+"' value='"+propiedad+"' placeholder='Marca, Modelo, color, puerto, ...'><p class=''>"+propiedad+"</p></td><td><!--input type='button' value='Editar' class='update btn btn-xs w-100 btn-info' data-id='"+id+"' --><input type='button' class='btn btn-xs w-100 btn-danger delete' value='Eliminar  ' data-id='"+id+"' ></td>"+"</tr>";
+                      var tr_str = "<tr data-entry-id='"+id+"'><td><input type='hidden' value="+id+"  /></td><td><input type='text'  class='nombre  d-none w-100' id='nombre-"+id+"' value="+nombre+" placeholder='Marca, Modelo, color, puerto, ...''><p class=''>"+nombre+"</p></td><td><input type='text'  class='propiedad  d-none w-100' id='propiedad-"+id+"' value='"+propiedad+"' placeholder='Marca, Modelo, color, puerto, ...'><p class=''>"+propiedad+"</p></td><td><!--input type='button' value='Editar' class='update btn btn-xs w-100 btn-info' data-id='"+id+"' --><input type='button' class='btn btn-xs w-100 btn-danger delete' value='Eliminar  ' data-id='"+id+"' ></td>"+
+                    "</tr>";
                     $("#userTable tbody").append(tr_str);
                     var option="<input name='caracteristicas[]' value="+id+" id='input-"+id+"' />";
                     $("#caracteristicas").append(option);    
                     
-                }else if(data == 0){
+                  }else if(data == 0){
                     swal("UPS!", "Error en el servidor!", "danger");
                     alert('Error.');
-                }else{
+                  }else{
                     alert(data);
-               }
-                // Empty the input fields
-                $('#nombre').val('');
-                $('#propiedad').val('');
-         }).fail(function(x,xs,xt){
+                  }
+                  // Empty the input fields
+                  $('#nombre').val('');
+                  $('#propiedad').val('');
+             
+             }).fail(function(x,xs,xt){
                   //nos dara el error si es que hay alguno
                  // window.open(JSON.stringify(x));
                 alert('error: ' + x+"\n error string: "+ xs + "\n error throwed: " + xt);
             });
-      }else{
-          alert(' falta datos');
-      }
-  });
+        }else{
+            alert(' falta datos');
+        }
+      
 
+    });
+
+  
     // Delete record
  $(document).on("click", ".delete" , function() {
       var delete_id = $(this).data('id');
@@ -226,8 +230,8 @@ $(document).ready(function(){
         confirm: {
             text: "Si"
         }
-      }
-    }).then((willDelete) => {
+        }
+      }).then((willDelete) => {
         if (willDelete) {
             $.ajax({
                 headers: {
@@ -236,12 +240,15 @@ $(document).ready(function(){
                 url: '{{URL::to("/admin/caracteristicas/")}}/'+ delete_id,
                 data: {_token: CSRF_TOKEN, periferico:peri, caracteristica:delete_id},
                 type: 'delete'
-            }).done( function(response){
+            })
+                .done( function(response){
                     console.log(response);
                     swal("Felicidades!", "Elemento Eliminado correctamente!", "success");
                     $(el).closest( "tr" ).remove();
-                    $('#input-'+delete_id).attr('name','ca');
-            }).fail(function(response){console.log(response); });
+                    $('#caracteristicas #input-'+delete_id).remove();
+                }).fail(function(response){console.log(response);
+            
+                 });
         } 
     });
 
@@ -251,10 +258,10 @@ $(document).ready(function(){
     // Fetch records
     function fetchRecords(){
      $.ajaxSetup({
-        headers: {
-                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-            },
-        })
+                  headers: {
+                      'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                  }
+              });
         $.ajax({
         url: '{{ route("admin.caracteristicas.index") }}',
         method: 'GET',
@@ -292,8 +299,11 @@ $(document).ready(function(){
 
         }
       });
-   };
-});
+    };
+
+ });  
+ 
+
 </script>
 
 @endsection

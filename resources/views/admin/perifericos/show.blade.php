@@ -3,7 +3,7 @@
  <div class="breadcrumb">
       @component('partials.widget.breadcrumb')
         <li class="breadcrumb-item"><a href="{{ route("admin.perifericos.index") }}">Perifericoss</a></li>
-        <li class="breadcrumb-item active" > Perifericos:  {{ $cliente->nombre ?? '' }} </li>
+        <li class="breadcrumb-item active" > Perifericos:  {{ $periferico->nombre ?? '' }} </li>
           
       @endcomponent
   </div>

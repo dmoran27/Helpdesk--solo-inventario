@@ -7,7 +7,7 @@
       @endcomponent
   </div>
 
-@can('cliente_create')
+@can('periferico_create')
 
         <div class="">
             <a class="btn btn-success" href="{{ route("admin.perifericos.create") }}">
@@ -30,8 +30,7 @@
                 <thead>
                     <tr>
                         <th width="10">
-                            
-                        </th>
+*                        </th>
                          <th width="10">
                             #
                         </th>
@@ -89,17 +88,17 @@
                             </td>
 							                            
                             <td>
-                                 @can('user_show')
+                                 @can('periferico_show')
                                     <a class="btn btn-xs btn-success w-100" href="{{ route('admin.perifericos.show', $periferico->id) }}">
                                         Ver
                                     </a>
                                 @endcan
-                                @can('user_edit')
+                                @can('periferico_edit')
                                     <a class="btn btn-xs btn-info w-100" href="{{ route('admin.perifericos.edit', $periferico) }}">
                                         Editar
                                     </a>
                                 @endcan
-                                @can('user_delete')
+                                @can('periferico_delete')
                                       <form action="{{ route('admin.perifericos.destroy', $periferico->id) }}" method="POST" class="w-100 d-inline-block formularioEliminar" id="formularioEliminar{{$periferico->id}}" 
                                       ">
                                         <input type="hidden" name="_method" value="DELETE">
@@ -126,7 +125,7 @@
                
                         <th>Pertenence?</th>
                          <th>Observación</th>
-                         <th>Tipo de Periferico</th>
+                         <th>Tipo </th>
                         <th>Acciones</th>
                     </tr>
                 </tfoot>

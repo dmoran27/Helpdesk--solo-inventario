@@ -59,9 +59,7 @@
    <!--script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>   
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script-->
    
-<script type="text/javascript">
-     
-</script>
+
 <script>
 $(function() {
   
