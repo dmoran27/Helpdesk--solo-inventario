@@ -1,0 +1,305 @@
+//----------------------------------------------Sidebar
+
+.sidebar-dark-primary {
+    background-color: $primary !important;
+    .sidebar .nav li{
+         a {
+            color: #fff !important;
+            padding: 15px;
+             border-bottom: 1px solid $car !important;
+             border-radius: 0px;
+             margin-bottom: 0px !important;
+        }
+        .nav{
+            background: rgba(255,255,255,.1);
+            li a{
+                 border-bottom: 1px solid transparent !important;
+            }
+        }
+        .active{
+            color: $primary !important;
+            background: $car !important;
+        }
+
+    }
+        } 
+        .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active {
+        color: $primary !important;
+            background: $car !important;
+  
+  
+
+}
+  [class*=sidebar-dark] .brand-link {
+    color: rgba(255,255,255,.8);
+    border-bottom: 1px solid $car !important;
+}
+
+//-----------------------------------------------Color de fondo
+.content-wrapper {
+    background: $secondary !important;
+}
+
+//--------------------------------------------------Breadcrumb
+.breadcrumb {
+    background-color: transparent !important;
+    a{
+        color: $primary;
+        font-weight: bold;
+        &hover{
+            color: #000 !important;
+        }
+    }
+    .active{
+        font-style: italic;
+    }
+}
+
+//---------------------------------------------------------titulos
+
+
+.card .card-header{
+    color: $primary;
+    text-align: center;
+    h5{
+    font-weight: bold !important;
+}
+}
+
+//----------------------------------------------------------DataTables
+table.dataTable tbody>tr.selected, table.dataTable tbody>tr>.selected {
+    background-color: #3d6477 !important;
+}
+table.dataTable tbody tr.selected a, table.dataTable tbody th.selected a, table.dataTable tbody td.selected a {
+    color: #fff !important;
+}
+.buttons-print{
+   
+   background-color: #287ec2;
+    color: #fff;  
+   
+}
+.buttons-delete span span, .buttons-print span span{
+        padding-left: 5px;
+        @media screen and (max-width: 425px) {
+        display: none !important;
+    }
+    
+}
+.buttons-collection{
+    background-color: $primary;
+    color: #fff;
+    
+    
+   
+}
+.btn-info{
+     background-color: #287ec2 !important;
+}
+
+.dataTables_wrapper{
+    display: flex;
+flex-wrap: wrap;
+
+    .dataTables_scroll{
+        width: 100%;
+        order:4;
+    }
+    .dt-buttons{
+        width: 100%;
+        order:3;
+        .btn, .btn-group{
+            
+             .dt-button{
+                color: $primary;
+        font-weight: bold;
+        &hover{
+            color: #000 !important;
+        }
+             }
+             .dropdown-item.active, .dropdown-item:active {
+                color: #fff;
+                text-decoration: none;
+                background-color: $primary;
+            }
+        }
+    }
+
+    .dataTables_length{
+
+        order:1;
+        label{
+            width: 260px;
+        }
+    }
+    .dataTables_filter{
+    order: 2;
+    position: absolute;
+    right: 0;
+    margin-right: 20px;
+    input{
+        width: 260px;
+    }
+    @media screen and (max-width: 767px) {
+        position: relative;
+    }
+    }
+    .dataTables_paginate{
+         order: 6;
+         width: 100%;
+         padding-left: 2px;  
+         ul li a{
+            border: 1px solid #dee2e6;
+            color: $primary;
+            &:hover{
+                background: $secondary;
+
+            }
+            .active{
+                color: $primary !important;
+
+                background: $secondary !important;
+            }
+         } 
+    }
+    .dataTables_info{
+         order: 5;
+         width: 100%;   
+    }
+
+}
+
+   .table-striped tbody tr:nth-of-type(odd) {
+    background-color: $secondary;
+    color: $primary;
+    }
+    tbody tr:hover{
+        color: #000 !important;
+        background: $secondary !important;
+    }
+   tfoot th{
+    padding: 0px !important;
+     input{
+           width: 100%;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+             color: $primary;
+             &hover{
+                cursor:context-menu;
+             }
+             &::placeholder {
+             color:  #183884;
+            }
+
+            &::-webkit-input-placeholder {
+              color:  #183884;
+            }
+            &::-moz-placeholder {
+              color:  #183884;
+            }
+            &:-ms-input-placeholder {
+              color:  #183884;
+            }
+            &:-moz-placeholder {
+              color: #183884;            } 
+            &:focus, &:active{
+                border: none !important;
+                box-shadow: none !important;
+            }
+        }       
+   
+}
+
+//-----------------------------------------------------Login
+.login-bg{
+	position: relative;
+    min-height: 100vh !important; 
+    background-size: cover !important;
+    background-attachment: fixed !important;
+    background-position: center 0;
+    .logo{
+    	img{
+    		width: 200px !important;
+    	}
+    	p{
+    		font-weight: 700;
+			font-size:12px;
+			color: #183884;
+			display: block;
+			border-left: 2px solid #183884;
+			padding-left: 20px;
+    	}
+
+    }
+
+   
+    .formulario{
+    	h4{
+			font-weight: 700;
+			font-size:32px;
+			color: #183884;
+			padding: 30px 0px	;
+    	}
+    	.input{
+
+    		border-radius: 50px;
+    		padding: 0px 20px;
+    		color:  #183884 !important;
+    		background: rgba(#e8f0fe, 0.6)!important;
+    		input{
+    		border: none;
+ 			background: transparent !important;
+    		font-size: 20px;
+    		 color: #183884;
+    		 &::placeholder {
+             color:  #183884;
+            }
+
+            &::-webkit-input-placeholder {
+              color:  #183884;
+            }
+            &::-moz-placeholder {
+              color:  #183884;
+            }
+            &:-ms-input-placeholder {
+              color:  #183884;
+            }
+            &:-moz-placeholder {
+              color: #183884;            } 
+            &:focus, &:active{
+            	border: none !important;
+            	box-shadow: none !important;
+            }       
+
+    	}
+    	
+    	}
+    }
+    .form-group {
+    	color: #000;
+
+        
+    	.btn{
+    		border-radius: 50px;
+
+    		color:  #e8f0fe !important;
+    			background: #183884 !important;
+    		
+    		&:hover{
+				background:  #e8f0fe !important;
+    		color: #183884 !important;
+    		}
+    	}
+    }
+}
+ @media screen and (max-width: 557px) {
+   .login-bg{
+   	.logo{
+   			h3{
+    		padding: 20px 0px;
+			border-left: none;
+			
+    	}
+   	}
+   }
+  }
