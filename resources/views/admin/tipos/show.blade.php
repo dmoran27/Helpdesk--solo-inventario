@@ -25,7 +25,7 @@
                 </tr>
                 <tr>
                     <th>
-                        Descripcion 
+                        Descripción 
                     </th>
                     <td>
                         {{ $tipo->descripcion ?? '' }}
@@ -41,7 +41,7 @@
                 </tr>
                 <tr>
                     <th>
-                        Fecha de creacion
+                        Fecha de creación
                     </th>
                     <td>
                         {{ $tipo->created_at ?? '' }}
@@ -49,7 +49,7 @@
                 </tr>
                 <tr>
                     <th>
-                        Fecha de actualizacion
+                        Fecha de actualización
                     </th>
                     <td>
                         {{ $tipo->updated_at ?? '' }}

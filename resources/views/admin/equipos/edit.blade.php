@@ -6,49 +6,104 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="text-center mb-5">DATOS DEL PERIFERICO.</h5>
-        <form action="{{ route('admin.perifericos.update', [$periferico]) }}" method="POST" class="container-fluid" enctype="multipart/form-data">
+         <h5 class="text-center mb-5">DATOS DEL EQUIPO.</h5>
+        <form action="{{ route('admin.equipos.update', [$equipo]) }}" method="POST" class="container-fluid" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
         <div class="row">
-            <div class="form-group {{ $errors->has('nombre') ? 'has-error' : '' }} col-12 col-md-6">
-                <label for="nombre2">Nombre:*</label>
-                <input type="text" id="nombre2" name="nombre" class="form-control" value="{{ old('nombre', isset($periferico) ? $periferico->nombre : '') }}">
-                @if($errors->has('nombre'))
-                    <p class="help-block">
-                        {{ $errors->first('nombre') }}
-                    </p>
-                @endif                
-            </div>   
+             
             <div class="form-group {{ $errors->has('identificador') ? 'has-error' : '' }} col-12 col-md-6">
-                <label for="identificador2">identificador:*</label>
-                <input type="text" id="identificador" class="form-control" value="{{ old('nombre', isset($periferico) ? $periferico->nombre : '') }}">
-                @if($errors->has('identificador'))
-                    <p class="help-block">
-                        {{ $errors->first('identificador') }}
-                    </p>
-                @endif                
+                <label for="identificador2">Identificador:*</label>
+                <input type="text" id="identificador" name="identificador" class="form-control{{ $errors->has('identificador') ? ' is-invalid' : '' }}" value="{{ old('identificador', isset($equipo) ? $equipo->identificador : '') }}">
+                               
+            </div> 
+             <div class="form-group {{ $errors->has('nombre') ? 'has-error' : '' }} col-12 col-md-6">
+                <label for="nombre2">Nombre:*</label>
+                <input type="text" id="nombre2" name="nombre" class="form-control{{ $errors->has('nombre') ? ' is-invalid' : '' }}" value="{{ old('nombre', isset($equipo) ? $equipo->nombre : '') }}">
+                              
+            </div> 
+             <div class="form-group {{ $errors->has('marca') ? 'has-error' : '' }} col-12 col-md-4">
+                <label for="marca2">Marca:</label>
+                <input type="text" id="marca2" name="marca" class="form-control{{ $errors->has('marca') ? ' is-invalid' : '' }}" value="{{ old('marca', isset($equipo) ? $equipo->marca : '') }}">
+                               
+            </div> 
+             <div class="form-group {{ $errors->has('modelo') ? 'has-error' : '' }} col-12 col-md-4">
+                <label for="modelo2">Modelo:</label>
+                <input type="text" id="modelo2" name="modelo" class="form-control{{ $errors->has('modelo') ? ' is-invalid' : '' }}" value="{{ old('modelo', isset($equipo) ? $equipo->modelo : '') }}">
+                               
+            </div> 
+             <div class="form-group {{ $errors->has('serial') ? 'has-error' : '' }} col-12 col-md-4">
+                <label for="serial2">Serial:</label>
+                <input type="text" id="serial2" name="serial" class="form-control{{ $errors->has('serial') ? ' is-invalid' : '' }}" value="{{ old('serial', isset($equipo) ? $equipo->serial : '') }}">
+                                
             </div> 
             <div class="form-group {{ $errors->has('tipo')}} col-12">
                 <label for="tipo" class=" col-form-label text-md-right">Tipo:*</label>
                 <div class="">   
                  
-                    <select class="form-control{{ $errors->has('tipo') ? ' is-invalid' : '' }} " name="tipo_id" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                   <select class="form-control{{ $errors->has('tipo') ? ' is-invalid' : '' }} " name="tipo_id" style="width: 100%;" tabindex="-1" aria-hidden="true">
                          @foreach($tipos as $tipo)
-                            <option value="{{$tipo->id}} " @if($tipo->id=== $periferico->tipo_id) selected @else '' @endif">{{$tipo->nombre}}</option>
+                            <option value="{{$tipo->id}} " @if($tipo=== $equipo->tipo_id) selected @else '' @endif">{{$tipo->nombre}}></option>
                         @endforeach
                       
                       </select>
                     
                 </div>
             </div> 
+             <div class="form-group {{ $errors->has('tipo')}} col-12">
+                <label for="tipo" class=" col-form-label text-md-right">Dependencia:*</label>
+                <div class="">   
+                 
+                    <select class="form-control{{ $errors->has('dependencia') ? ' is-invalid' : '' }} " name="dependencia_id" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                         @foreach($dependencias as $dependencia)
+                            <option value="{{$dependencia->id}} "@if($dependencia->id === $equipo->dependencia_id) selected @else '' @endif>{{$dependencia->nombre}}</option>
+                        @endforeach
+                      
+                      </select>
+                    
+                </div>
+            </div> 
+            
+            <div class="form-group col-md-6 col-12 {{ $errors->has('perifericos') ? 'has-error' : '' }}">
+                <label for="perifericos">Perifericos
+                    <span class="btn btn-info btn-xs select-all">Seleccionar Todo</span>
+                    <span class="btn btn-info btn-xs deselect-all">Quitar todo</span>
+                    @can('periferico_create')
+                    <a href="{{ route("admin.perifericos.create") }}"><span class="btn btn-info btn-xs">Agregar Nuevo</span></a>
+                    @endcan
+                  </label>
+                <select id="perifericos" name="perifericos[]" class="form-control select2" multiple="multiple">
+                    @foreach($perifericos as $id => $periferico)
+                        <option value="{{$periferico->id}}"  {{ (in_array($id, old('periferico', [])) || isset($equipo) && $equipo->perifericos->contains($periferico->id )) ? 'selected' : '' }}>
+                            {{ $periferico->nombre }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+              <div class="form-group col-md-6 col-12 {{ $errors->has('softwares') ? 'has-error' : '' }}">
+                <label for="softwares">Softwares
+                    <span class="btn btn-info btn-xs select-all">Seleccionar Todo</span>
+                    <span class="btn btn-info btn-xs deselect-all">Quitar todo</span>
+                    @can('software_create')
+                    <a href="{{ route("admin.softwares.create") }}"><span class="btn btn-info btn-xs">Agregar Nuevo</span></a>
+                    @endcan
+                  </label>
+                <select id="softwares" name="softwares[]" class="form-control select2" multiple="multiple">
+                    @foreach($softwares as $id => $softwares)
+                        <option value="{{ $softwares->id }}"  {{ (in_array($id, old('software', [])) || isset($equipo) && $equipo->softwares->contains($softwares->id )) ? 'selected' : '' }} >
+                            {{ $softwares->nombre }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
             <div class="form-group {{ $errors->has('perteneciente')}} col-12 col-md-6">
                 <label for="perteneciente" class=" col-form-label text-md-right">Pertenece a la UNEXPO?*</label>
                 <div class="">   
-                    <select class="form-control{{ $errors->has('perteneciente') ? ' is-invalid' : '' }}" name="perteneciente" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                      <select class="form-control{{ $errors->has('perteneciente') ? ' is-invalid' : '' }}" name="perteneciente" style="width: 100%;" tabindex="-1" aria-hidden="true">
                          @foreach($enumoption as $perteneciente)
-                            <option value="{{$perteneciente}}" @if($perteneciente === $periferico->perteneciente) selected @else '' @endif ">{{$perteneciente}}</option>
+                            <option value="{{$perteneciente}}" @if($perteneciente === $equipo->perteneciente) selected @else '' @endif>{{$perteneciente}}</option>
                         @endforeach
                       
                       </select>
@@ -57,9 +112,9 @@
             <div class="form-group {{ $errors->has('estado')}} col-12 col-md-6">
                 <label for="estado" class=" col-form-label text-md-right">Estado del equipo:*</label>
                 <div class="">   
-                    <select class="form-control{{ $errors->has('estado') ? ' is-invalid' : '' }}" name="estado" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                     <select class="form-control{{ $errors->has('estado') ? ' is-invalid' : '' }}" name="estado" style="width: 100%;" tabindex="-1" aria-hidden="true">
                          @foreach($enumoption2 as $estado)
-                            <option value="{{$estado}}" @if($estado === $periferico->estado) selected @else '' @endif >{{$estado}}</option>
+                            <option value="{{$estado}}" @if($estado === $equipo->estado_equipo) selected @else '' @endif >{{$estado}}</option>
                         @endforeach
                       
                       </select>
@@ -67,21 +122,19 @@
             </div>
             <div class="form-group {{ $errors->has('observacion') ? 'has-error' : '' }} col-12">
                 <label for="observacion">Observación:*</label>
-                <input type="text" id="observacion" name="observacion" class="form-control" value="{{ old('observacion', isset($periferico) ? $periferico->observacion : '') }}">
-                @if($errors->has('observacion'))
-                    <p class="help-block">
-                        {{ $errors->first('observacion') }}
-                    </p>
-                @endif                
+                <textarea type="text" id="observacion" name="observacion" class="form-control{{ $errors->has('observacion') ? ' is-invalid' : '' }}" value="{{ old('observacion', isset($equipo) ? $equipo->observacion : '') }}">{{ old('observacion', isset($equipo) ? $equipo->observacion : '') }}</textarea> 
+                             
             </div>               
         </div>
-          @foreach($caracteristicas as $caracteristica) 
-          <div  id="caracteristicas" class="d-none" >
-                <input name='caracteristicas[]' value="{{$caracteristica->id}}" id='input-"{{$caracteristica->id}}"' />
-        </div>
+            <div  id="caracteristicas" class="d-none" >
+        @if(isset($equipo->caracteristicas))
+          @foreach($equipo->caracteristicas as $id => $caracteristica) 
+                <input name='caracteristicas[]' value="{{old('caracteristica->id', isset($equipo) ?$caracteristica->id :'')}}" id='input-"{{$caracteristica->id}}"' />
           @endforeach
+          @endif
+         </div>
         <div class="table-responsive row">
-             <h5 class="text-center my-5 col-12">CARACTERISTICAS DEL PERIFERICO:</h5>
+             <h5 class="text-center my-5 col-12">CARACTERISTICAS DEL EQUIPO:</h5>
             <table class=" table table-bordered table-striped table-hover  col-12" id='userTable'>
                 <thead>
                     <tr> 
@@ -99,11 +152,10 @@
                        
                         <th>
                             Acciones
-                            &nbsp;
                         </th>
                     </tr>
                 </thead>
-                <tbody  value=2>                   
+                  <tbody  value=2>                   
                         <tr data-entry-id=" ">
                             <td>
                            
@@ -138,15 +190,22 @@
                             <td>
                                 <!--input type='button' value='Editar' class='update btn btn-xs w-100 btn-info' data-id='id' --><input type='button' class='btn btn-xs w-100 btn-danger delete' value='Eliminar  ' data-id='{{$caracteristica->id}}' >
                             </td>
-                    </tr>;
+                    </tr>
                         @endforeach
 
                   
                 </tbody>
             </table>
         </div>         
-            <div>
-                <input class="btn btn-danger" type="submit" value="Actualizar">
+        <!--*           Errores         -->
+            @include('partials.widget.errors')
+
+            <!--*      boton de envio   -->
+           <div class="col-12 d-flex justify-content-between">
+                <a class="btn btn-info" href="{{ route("admin.equipos.index") }}">
+                    Volver
+                </a>
+                <input class="btn btn-success" type="submit" value="Guardar">
             </div>
        
     </div>
@@ -237,8 +296,6 @@ $(document).ready(function(){
     // Delete record
  $(document).on("click", ".delete" , function() {
       var delete_id = $(this).data('id');
-      var peri= {{$periferico->id}};
-     console.log(delete_id);
       var el = this;
     swal({
       title: "Esta Seguro de Eliminar este elemento?",
@@ -261,16 +318,13 @@ $(document).ready(function(){
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                 url: '{{URL::to("/admin/caracteristicas/")}}/'+ delete_id,
-                data: {_token: CSRF_TOKEN, periferico:peri, caracteristica:delete_id},
                 type: 'delete'
             })
                 .done( function(response){
-                    console.log(response);
                     swal("Felicidades!", "Elemento Eliminado correctamente!", "success");
                     $(el).closest( "tr" ).remove();
                     $('#caracteristicas #input-'+delete_id).remove();
-                }).fail(function(response){console.log(response);
-            
+                
                  });
         } 
     });
@@ -328,3 +382,4 @@ $(document).ready(function(){
 </script>
 
 @endsection
+    

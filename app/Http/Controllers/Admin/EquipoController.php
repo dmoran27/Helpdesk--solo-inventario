@@ -25,7 +25,7 @@ class EquipoController extends Controller{
 
      public function show(Equipo $equipo){
         abort_unless(\Gate::allows('equipo_show'), 403);
-        $equipo->load('caracteristicas', 'perifericos');
+        $equipo->load('caracteristicas', 'perifericos','softwares');
         return view('admin.equipos.show', compact('equipo'));
     }
 
@@ -49,7 +49,6 @@ class EquipoController extends Controller{
             'nombre' => 'required|string',
             'estado' => 'required|string',
             'perteneciente' => 'required|string',
-            'observacion' => 'string|max:50',
             'user_id' => 'required|exists:users,id',
             'dependencia_id' => 'required|exists:dependencias,id',
             'tipo_id' => 'required|exists:tipos,id',
@@ -63,23 +62,36 @@ class EquipoController extends Controller{
             }
         
         $equipo = Equipo::create($request->all());
-        $equipo->caracteristicas()->sync($request->input('caracteristicas', []));
-        $equipo->caracteristicas()->sync($request->input('perifericos', []));
-        $equipo->caracteristicas()->sync($request->input('softwares', []));
-        $equipo->load('caracteristicas', 'perifericos','softwares');
+    if($request->input('caracteristicas', [])){
+        $equipo->caracteristicas()->attach($request->input('caracteristicas', []));
+       
+    }
+    if ($request->input('perifericos', [])) {
+        $equipo->perifericos()->attach($request->input('perifericos', []));
+       
+    }
+    if ($request->input('softwares', [])) {
+       $equipo->softwares()->attach($request->input('softwares', []));
+       
+    }    
         $equipos = Equipo::all();
          $notificacion = 'Equipo agregado con exito';
         return view('admin.equipos.index', compact('equipos','notificacion' ));
     }
 
     public function edit(Equipo $equipo){
-        $caracteristicas = Caracteristica::all()->pluck('title', 'id');
-        $areas = Area::all();
-        $enumoption = General::getEnumValues('equipos','sexo');
-         $dependencias = Dependencia::All();
-        $equipo->load('caracteristicas');
-        abort_unless(\Gate::allows('equipo_edit'), 403);      
-        return view('admin.equipos.edit', compact('caracteristicas','dependencias','enumoption', 'areas', 'equipo'));
+         abort_unless(\Gate::allows('equipo_edit'), 403);    
+         
+        $caracteristicas=$equipo->caracteristicas()->get();
+        $softwares = Software::all();
+        $tipos=Tipo::All()->where('tipo', 'Equipo');
+         $enumoption = General::getEnumValues('equipos','perteneciente'); 
+        $enumoption2 = General::getEnumValues('equipos','estado_equipo');  
+        $perifericos = Periferico::all();     
+        $dependencias = Dependencia::All();
+         $equipo->load('caracteristicas'); 
+        abort_unless(\Gate::allows('equipo_create'), 403);
+        return view('admin.equipos.edit', compact( 'equipo','caracteristicas','dependencias', 'enumoption','softwares', 'tipos','enumoption2','perifericos'));
     }
 
     public function update(Request $request, Equipo $equipo){
@@ -110,13 +122,58 @@ class EquipoController extends Controller{
             if ($encontrado == false){
                $equipo = Equipo::findOrFail($equipo->id);
                $caracteristica_id = $value1;
-                $equipo->caracteristicas()->detach($caracteristica_id);  
+                $equipo->caracteristicas()->detach($equipo->id);  
+            }
+        }
+        $array11=$equipo->perifericos()->get();
+        $array22=$request->input('perifericos', []);
+        foreach ($array11 as $value11) {
+            $encontrado=false;
+            foreach ($array22 as $value22) {
+                if ($value11 == $value22){
+                    $encontrado=true;
+                    $break;
+                }
+            }
+            if ($encontrado == false){
+               $equipo = Equipo::findOrFail($equipo->id);
+               $perifericos_id = $value11;
+                $equipo->perifericos()->detach($equipo->id);  
+            }
+        }
+        $array111=$equipo->softwares()->get();
+        $array222=$request->input('softwares', []);
+        foreach ($array111 as $value111) {
+            $encontrado=false;
+            foreach ($array222 as $value222) {
+                if ($value111 == $value222){
+                    $encontrado=true;
+                    $break;
+                }
+            }
+            if ($encontrado == false){
+               $equipo = Equipo::findOrFail($equipo->id);
+               $softwares_id = $value111;
+                $equipo->softwares()->detach($equipo->id);  
             }
         }
          Equipo::findOrFail($equipo->id)->update($request->all());
         $equipo->update($request->all());
+    if($request->input('caracteristicas', [])){
+           
         $equipo->caracteristicas()->sync($request->input('caracteristicas', []));
-        $equipo->load('caracteristicas');
+       
+    }
+    if ($request->input('perifericos', [])) {
+       
+        $equipo->perifericos()->sync($request->input('perifericos', []));
+       
+    }
+    if ($request->input('softwares', [])) {
+      
+       $equipo->softwares()->sync($request->input('softwares', []));
+       
+    }    
                
         $equipos = Equipo::all();
         $notificacion = 'Equipo Actualizado con Exito';

@@ -18,7 +18,7 @@ class CreatePerifericosTable extends Migration
             $table->string('identificador')->unique();
              $table->string('nombre');
              $table->unsignedInteger('tipo_id');
-             $table->enum('estado',['nuevo', 'remplazado', 'dañado', 'obsoleto']);
+             $table->enum('estado',['Nuevo', 'En Uso','Usado', 'Dañado', 'Obsoleto']);
               $table->enum('perteneciente', ['si', 'no']);
             $table->string('observacion')->nullable();
             $table->foreign('tipo_id')->references('id')->on('tipos');

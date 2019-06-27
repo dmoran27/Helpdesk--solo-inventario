@@ -31,17 +31,17 @@
                               
             </div> 
              <div class="form-group {{ $errors->has('marca') ? 'has-error' : '' }} col-12 col-md-4">
-                <label for="marca2">Marca:*</label>
+                <label for="marca2">Marca:</label>
                 <input type="text" id="marca2" name="marca" class="form-control{{ $errors->has('nombre') ? ' is-invalid' : '' }}" value="{{ old('marca') }}">
                                
             </div> 
              <div class="form-group {{ $errors->has('modelo') ? 'has-error' : '' }} col-12 col-md-4">
-                <label for="modelo2">Modelo:*</label>
+                <label for="modelo2">Modelo:</label>
                 <input type="text" id="modelo2" name="modelo" class="form-control{{ $errors->has('nombre') ? ' is-invalid' : '' }}" value="{{ old('modelo') }}">
                                
             </div> 
              <div class="form-group {{ $errors->has('serial') ? 'has-error' : '' }} col-12 col-md-4">
-                <label for="serial2">Serial:*</label>
+                <label for="serial2">Serial:</label>
                 <input type="text" id="serial2" name="serial" class="form-control{{ $errors->has('nombre') ? ' is-invalid' : '' }}" value="{{ old('serial') }}">
                                 
             </div> 
@@ -71,34 +71,40 @@
                     
                 </div>
             </div> 
-            <div class="form-group {{ $errors->has('softwares') ? 'has-error' : '' }} col-12">
-                <label for="softwares" class="w-100">Softwares del equipo
-                    <span class="btn btn-info btn-xs select-all">Seleccionar todo</span>
-                    <span class="btn btn-info btn-xs deselect-all">Quitar todo</span></label>
-                <select name="softwares[]" id="softwares" class="form-control w-100 select2" multiple="multiple">
-                    @foreach($softwares as $id => $softwares)
-                        <option value="{{ $id }}" {{ (in_array($id, old('softwares', [])) || isset($role) && $role->softwares->contains($id)) ? 'selected' : '' }}>
-                            {{ $softwares->nombre }}
-                        </option>
-                    @endforeach
-                </select>
-                
-               
-            </div>
-             <div class="form-group {{ $errors->has('perifericos') ? 'has-error' : '' }} col-12">
-                <label for="perifericos" class="w-100">Perifericos del equipo
-                    <span class="btn btn-info btn-xs select-all">Seleccionar todo</span>
-                    <span class="btn btn-info btn-xs deselect-all">Quitar todo</span></label>
-                <select name="perifericos[]" id="perifericos" class="form-control w-100 select2" multiple="multiple">
+            
+            <div class="form-group col-md-6 col-12 {{ $errors->has('perifericos') ? 'has-error' : '' }}">
+                <label for="perifericos">Perifericos
+                    <span class="btn btn-info btn-xs select-all">Seleccionar Todo</span>
+                    <span class="btn btn-info btn-xs deselect-all">Quitar todo</span>
+                    @can('periferico_create')
+                    <a href="{{ route("admin.perifericos.create") }}"><span class="btn btn-info btn-xs">Agregar Nuevo</span></a>
+                    @endcan
+                  </label>
+                <select id="perifericos" name="perifericos[]" class="form-control select2" multiple="multiple">
                     @foreach($perifericos as $id => $perifericos)
-                        <option value="{{ $id }}" {{ (in_array($id, old('perifericos', [])) || isset($role) && $role->perifericos->contains($id)) ? 'selected' : '' }}>
+                        <option value="{{ $perifericos->id }}" >
                             {{ $perifericos->nombre }}
                         </option>
                     @endforeach
                 </select>
-              
-               
             </div>
+              <div class="form-group col-md-6 col-12 {{ $errors->has('softwares') ? 'has-error' : '' }}">
+                <label for="softwares">Softwares
+                    <span class="btn btn-info btn-xs select-all">Seleccionar Todo</span>
+                    <span class="btn btn-info btn-xs deselect-all">Quitar todo</span>
+                    @can('software_create')
+                    <a href="{{ route("admin.softwares.create") }}"><span class="btn btn-info btn-xs">Agregar Nuevo</span></a>
+                    @endcan
+                  </label>
+                <select id="softwares" name="softwares[]" class="form-control select2" multiple="multiple">
+                    @foreach($softwares as $id => $softwares)
+                        <option value="{{ $softwares->id }}" >
+                            {{ $softwares->nombre }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
             <div class="form-group {{ $errors->has('perteneciente')}} col-12 col-md-6">
                 <label for="perteneciente" class=" col-form-label text-md-right">Pertenece a la UNEXPO?*</label>
                 <div class="">   
@@ -123,7 +129,7 @@
             </div>
             <div class="form-group {{ $errors->has('observacion') ? 'has-error' : '' }} col-12">
                 <label for="observacion">Observación:*</label>
-                <textarea type="text" id="observacion" name="observacion" class="form-control{{ $errors->has('nombre') ? ' is-invalid' : '' }}" value="{{ old('observacion') }}">{{ old('observacion') }}</textarea> 
+                <textarea type="text" id="observacion" name="observacion" class="form-control{{ $errors->has('observacion') ? ' is-invalid' : '' }}" value="{{ old('observacion') }}">{{ old('observacion') }}</textarea> 
                              
             </div>               
         </div>
@@ -150,7 +156,6 @@
                        
                         <th>
                             Acciones
-                            &nbsp;
                         </th>
                     </tr>
                 </thead>

@@ -40,7 +40,7 @@
                 <div class="">   
                     <select class="form-control{{ $errors->has('perteneciente') ? ' is-invalid' : '' }}" name="perteneciente" style="width: 100%;" tabindex="-1" aria-hidden="true">
                          @foreach($enumoption as $perteneciente)
-                            <option value="{{$perteneciente}}" @if($perteneciente === $periferico->perteneciente) selected @else '' @endif>{{$perteneciente}}</option>
+                            <option value="{{$perteneciente}}"{{ (in_array($id, old('perifericos', [])) || isset($equipo) && $equipo->perifericos->contains($id)) ? 'selected' : '' }}>{{$perteneciente}}</option>
                         @endforeach
                       
                       </select>

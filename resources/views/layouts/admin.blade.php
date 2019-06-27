@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" type="image/vnd.microsoft.icon" href="unexpo.ico">
+    <link rel="icon" type="image/vnd.microsoft.icon" href="{{asset('unexpo.ico')}}">
     <title>UNEXPO-ORTSI</title>
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet" />
@@ -27,7 +27,7 @@
  @guest
      @yield('login')                
  @else
-<body class="sidebar-mini sidebar-collapse " style="height: auto;">
+<body class="sidebar-mini sidebar-open" style="height: auto;">
     <div class="wrapper">
         
         @include('partials.header')

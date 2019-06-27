@@ -21,12 +21,12 @@ class CreateEquiposTable extends Migration
             $table->string('marca')->nullable();
             $table->string('modelo')->nullable();
             $table->string('serial')->nullable();
-            $table->enum('estado_equipo',['nuevo', 'remplazado', 'dañado', 'obsoleto']);
+            $table->enum('estado_equipo',['Nuevo', 'En Uso','Usado', 'Dañado', 'Obsoleto']);
             $table->enum('perteneciente', ['si', 'no']);
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('tipo_id');
             $table->unsignedInteger('dependencia_id');
-            $table->foreign('dependencia_id')->references('id')->on('users');
+            $table->foreign('dependencia_id')->references('id')->on('dependencias');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('tipo_id')->references('id')->on('tipos');
             $table->softDeletes(); //Nueva línea, para el borrado lógico

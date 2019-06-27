@@ -11,7 +11,7 @@ $factory->define(App\Equipo::class, function (Faker $faker) {
             'marca'=> str_random(8),
             'modelo'=> str_random(8),
             'serial'=> str_random(8),
-            'estado_equipo'=> $faker->randomElement(['nuevo', 'remplazado', 'dañado', 'obsoleto']),
+            'estado_equipo'=> $faker->randomElement(['Nuevo', 'En Uso','Usado', 'Dañado', 'Obsoleto']),
             'perteneciente'=> $faker->randomElement(['no', 'si']),
               'user_id'=> mt_rand(1,9),
               'tipo_id'=> mt_rand(1,9),

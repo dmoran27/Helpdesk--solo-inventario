@@ -12,7 +12,7 @@ class Equipo extends Model
     protected $dates = ['deleted_at'];
      protected $table = 'equipos';
     protected $perteneciente= ['si', 'no'];
-    protected $estado_equipo=['nuevo', 'remplazado', 'dañado', 'obsoleto'];
+    protected $estado_equipo=['Nuevo', 'En Uso','Usado', 'Dañado', 'Obsoleto'];
     protected $fillable = [
            'nombre',    
             'identificador',

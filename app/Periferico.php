@@ -11,7 +11,7 @@ class Periferico extends Model
 //campos en la tabla periferico
     protected $dates = ['deleted_at'];
      protected $perteneciente= ['si', 'no'];
-    protected $estado=['nuevo', 'remplazado', 'dañado', 'obsoleto'];
+    protected $estado=['Nuevo', 'En Uso','Usado', 'Dañado', 'Obsoleto'];
     protected $table = 'perifericos';
     protected $fillable = [
     'nombre',

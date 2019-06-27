@@ -7,7 +7,7 @@ $factory->define(App\Periferico::class, function (Faker $faker) {
 
     	'nombre'=>$faker->name,
     		'identificador'=> str_random(18),
-        'estado'=> $faker->randomElement(['nuevo', 'remplazado', 'dañado', 'obsoleto']),
+        'estado'=> $faker->randomElement(['Nuevo', 'En Uso','Usado', 'Dañado', 'Obsoleto']),
         'perteneciente'=> $faker->randomElement(['no', 'si']),
         'observacion'=>$faker->sentence,
         'user_id'=> mt_rand(1,9),
