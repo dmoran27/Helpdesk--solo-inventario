@@ -39,7 +39,7 @@ class ClienteController extends Controller{
         abort_unless(\Gate::allows('cliente_create'), 403);
         $request["user_id"]=auth()->user()->id;
         $email=$request->email;
-        $request["email"]= $email."@unexpo.com";
+        $request["email"]= $email."@unexpo.edu.ve";
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|string|max:255',
             'apellido' => 'required|string|max:255',
@@ -84,7 +84,7 @@ class ClienteController extends Controller{
         abort_unless(\Gate::allows('cliente_edit'), 403); 
          $request["user_id"]=auth()->user()->id;
           $email=$request->email;
-        $request["email"]= $email."@unexpo.com";
+        $request["email"]= $email."@unexpo.edu.ve";
         $validator = Validator::make($request->all(), [
            'nombre' => 'required|string|max:255',
             'apellido' => 'required|string|max:255',

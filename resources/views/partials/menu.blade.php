@@ -257,12 +257,24 @@
                 @endcan
                 @can('cliente_access')
                     <li class="nav-item">
-                        <a href="{{ route("admin.clientes.index") }}" class="nav-link {{ request()->is('admin/clientes') || request()->is('admin/clientes/*') ? 'active' : '' }}">
+                        <a href="{{ route("admin.clientes.index") }}" class="nav-link">
                             <i class="fa fa-user-tie">
 
                             </i>
                             <p>
                                 <span>Usuarios</span>
+                            </p>
+                        </a>
+                    </li>
+                @endcan 
+                @can('user_action_access')
+                    <li class="nav-item">
+                        <a href="{{ route("admin.useractions.index") }}" class="nav-link }}">
+                            <i class="fa fa-user-tie">
+
+                            </i>
+                            <p>
+                                <span>Acciones de los Tecnicos</span>
                             </p>
                         </a>
                     </li>

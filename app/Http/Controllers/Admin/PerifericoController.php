@@ -59,13 +59,8 @@ class PerifericoController extends Controller{
         }
         
         $periferico = Periferico::create($request->all());
-        $perifericos = Periferico::All();
-        $periferico->caracteristicas()->sync($request->input('caracteristicas', []));
-        $periferico->load('caracteristicas');
+        return redirect()->route('admin.perifericos.edit', $periferico);
         
-        $perifericos = Periferico::all();
-         $notificacion = 'Periferico Agregado con exito';
-        return view('admin.perifericos.index', compact('perifericos','notificacion' ));
     }
 
     public function edit(Periferico $periferico){
@@ -103,40 +98,16 @@ class PerifericoController extends Controller{
                         ->withInput();
             }
 
-        $array1=$periferico->caracteristicas()->get();
-        $array2=$request->input('caracteristicas', []);
-        foreach ($array1 as $value1) {
-            $encontrado=false;
-            foreach ($array2 as $value2) {
-                if ($value1 == $value2){
-                    $encontrado=true;
-                    $break;
-                }
-            }
-            if ($encontrado == false){
-               $periferico = Periferico::findOrFail($periferico->id);
-               $caracteristica_id = $value1;
-                $periferico->caracteristicas()->detach($caracteristica_id);  
-            }
-        }
         Periferico::findOrFail($periferico->id)->update($request->all());
-        $periferico->update($request->all());
-        $periferico->caracteristicas()->sync($request->input('caracteristicas', []));
-        $periferico->load('caracteristicas');
-                  
-        if(request()->ajax()){
-             if($validator->passes()){
-                         return response()->json(['msg'=>'success']);
-             }
-
-            return response()->json(['msg'=>$validator->errors()->all()]);
-
-        }      
+        $periferico->update($request->all());          
+              
        $perifericos = Periferico::all();
-         $notificacion = 'Periferico actualizado con Exito';
-        return view('admin.perifericos.index', compact('perifericos', 'notificacion'));
+       $notificacion = 'Periferico actualizado con Exito';
+       return view('admin.perifericos.index', compact('perifericos', 'notificacion'));
 
     }
+
+
     public function destroy(Periferico $periferico){
         abort_unless(\Gate::allows('periferico_delete'), 403);
         $periferico->caracteristicas()->delete();
@@ -154,4 +125,33 @@ class PerifericoController extends Controller{
          $notificacion = 'Perifericos Eliminados con Exito';
         return view('admin.perifericos.index', compact('perifericos','notificacion' ));
     }
+
+    public function CaracteristicaCreate(Request $request){
+        
+        abort_unless(\Gate::allows('caracteristica_create'), 403);
+        $request["user_id"]=auth()->user()->id;
+        $validator = Validator::make($request->all(), [
+            'nombre' => 'required|string',
+            'propiedad' => 'required|string',
+         ]);
+        if ($validator->fails()) {            
+           return  response()->json("fatal");
+        }           
+
+        $caracteristica = Caracteristica::create($request->all());
+        $caracteristica->perifericos()->sync($request->periferico);
+        $caracteristica->load('perifericos');
+        return response()->json($caracteristica->id);        
+    }
+
+    public function CaracteristicaDelete(Request $request){
+        $id= $request->caracteristica;
+        $caracteristica = Caracteristica::findOrFail($id);
+        $perif= $request->periferico;          
+        $caracteristica->perifericos()->detach($perif);
+        return response()->json(['success'=>'Eliminado.']);
+       
+    }
+
+    
 }

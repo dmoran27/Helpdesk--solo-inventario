@@ -7,7 +7,7 @@
 <div class="card">
     <div class="card-body">
         <h5 class="text-center mb-5">DATOS DEL PERIFERICO.</h5>
-        <form action="{{ route('admin.perifericos.update', [$periferico]) }}" method="POST" class="container-fluid" enctype="multipart/form-data">
+        <form action="{{ route('admin.perifericos.update', [$periferico]) }}" method="POST" class="container-fluid formulario-ajax-editar" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -40,7 +40,7 @@
                 <div class="">   
                     <select class="form-control{{ $errors->has('perteneciente') ? ' is-invalid' : '' }}" name="perteneciente" style="width: 100%;" tabindex="-1" aria-hidden="true">
                          @foreach($enumoption as $perteneciente)
-                            <option value="{{$perteneciente}}"{{ (in_array($id, old('perifericos', [])) || isset($equipo) && $equipo->perifericos->contains($id)) ? 'selected' : '' }}>{{$perteneciente}}</option>
+                            <option value="{{$perteneciente}}"  @if($perteneciente === $periferico->perteneciente) selected @else '' @endif >{{$perteneciente}}</option>
                         @endforeach
                       
                       </select>
@@ -63,16 +63,23 @@
                                
             </div>               
         </div>
-
-         <div  id="caracteristicas" class="d-none" >
-        @if(isset($periferico->caracteristicas))
-          @foreach($periferico->caracteristicas as $id => $caracteristica) 
-                <input name='caracteristicas[]' value="{{old('caracteristica->id', isset($periferico) ?$caracteristica->id :'')}}" id='input-"{{$caracteristica->id}}"' />
-          @endforeach
-          @endif
-         </div>
+            <!--*           Errores         -->
+            @include('partials.widget.errors')
+       
+          <div class="col-12 d-flex justify-content-between">
+                <a class="btn btn-info" href="{{ route("admin.perifericos.index") }}">
+                    Volver
+                </a>
+                <input class="btn btn-danger btn-ajax-editar" type="submit"  value="Actualizar">
+          </div>   
+    </div>
+</div>
+<div class="card">  
+    <div class="card-header"> 
+        <h5 class="text-center my-5 col-12">CARACTERISTICAS DEL PERIFERICO:</h5>
+    </div>
+    <div class="card-body"> 
         <div class="table-responsive row">
-             <h5 class="text-center my-5 col-12">CARACTERISTICAS DEL PERIFERICO:</h5>
             <table class=" table table-bordered table-striped table-hover  col-12" id='userTable'>
                 <thead>
                     <tr> 
@@ -115,7 +122,7 @@
 
 
 
-                         @foreach($caracteristicas as $caracteristica)
+                        @foreach($caracteristicas as $caracteristica)
                         <tr data-entry-id='{{$caracteristica->id}}'>
                             <td>
                                 <input type='hidden' value='{{$caracteristica->id}}'  />
@@ -127,7 +134,7 @@
                                 <input type='text'  class='propiedad  d-none w-100' id='propiedad-{{$caracteristica->id}}' value='propiedad' placeholder='Marca, Modelo, color, puerto, ...'><p class=''>{{$caracteristica->propiedad}}</p>
                             </td>
                             <td>
-                                <!--input type='button' value='Editar' class='update btn btn-xs w-100 btn-info' data-id='id' --><input type='button' class='btn btn-xs w-100 btn-danger delete' value='Eliminar  ' data-id='{{$caracteristica->id}}' >
+                                <input type='button' class='btn btn-xs w-100 btn-danger delete' value='Eliminar  ' data-id='{{$caracteristica->id}}' >
                             </td>
                     </tr>
                         @endforeach
@@ -139,17 +146,6 @@
 
 
 
-
-            <!--*           Errores         -->
-            @include('partials.widget.errors')
-       
-          <div class="col-12 d-flex justify-content-between">
-                <a class="btn btn-info" href="{{ route("admin.perifericos.index") }}">
-                    Volver
-                </a>
-                <input class="btn btn-danger" type="submit" value="Actualizar">
-            </div>
-       
     </div>
 </div>
 @endsection
@@ -160,19 +156,48 @@
 
     <script type='text/javascript'>
    
-      // Fetch records
-      //fetchRecords();
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
       // Add record
+
+      $("#guardar-periferico").on("click", function(e){
+      e.preventDefault();
+      alert("d");
+        // Capturamnos el boton de envío          
+            $.ajax({
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},    
+                type: $('.formulario-ajax').attr("method"),
+                url: $('.formulario-ajax').attr("action"),
+                data:$('.formulario-ajax').serialize(),
+                
+            }).done(function(data){
+              alert(data);
+                if(data > 0){
+                    swal("Felicidades!", "Elemento Actualizado correctamente!", "success");
+                  }else if(data == 0){
+                    swal("UPS!", "Error en el servidor!", "danger");
+                    alert('Error.');
+                  }else{
+                    alert(data);
+                  }   
+             }).fail(function(x,xs,xt){
+                  //nos dara el error si es que hay alguno
+                 // window.open(JSON.stringify(x));
+                alert('error: ' + x+"\n error string: "+ xs + "\n error throwed: " + xt);
+            });
+       
+
+    });
+
     $('#add').click(function(){
         var nombre = $("#nombre").val();
         var propiedad = $('#propiedad').val();
+        var periferico = {{$periferico->id}};
         if(nombre != '' && propiedad != '' ){             
             $.ajax({
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},    
-                url: '{{ route("admin.caracteristicas.store") }}',
+                url: '{{ route("admin.periferico.caracteristica.store") }}',
                 type: 'POST',
-                data: {nombre:nombre, propiedad:propiedad},
+                data: {nombre:nombre, propiedad:propiedad, periferico:periferico},
                 
             }).done(function(data){
                 if(data > 0){
@@ -237,7 +262,7 @@
                 headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                url: '{{URL::to("/admin/caracteristicas/")}}/'+ delete_id,
+                url: '{{ route("admin.periferico.caracteristica.delete") }}',
                 data: {_token: CSRF_TOKEN, periferico:peri, caracteristica:delete_id},
                 type: 'delete'
             })
@@ -251,59 +276,11 @@
                  });
         } 
     });
-
-
-
-
-    // Fetch records
-    function fetchRecords(){
-     $.ajaxSetup({
-                  headers: {
-                      'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                  }
-              });
-        $.ajax({
-        url: '{{ route("admin.caracteristicas.index") }}',
-        method: 'GET',
-        dataType: 'json',
-        success: function(response){
-         
-
-          var len = 0;
-          $('#userTable tbody tr:not(:first)').empty(); // Empty <tbody>
-          if(response!= null){
-            len = response.length;
-          }
-          if(len > 0){
-            for(var i=0; i<len; i++){
-
-              var id = response[i].id;
-              var nombre = response[i].nombre;
-              var propiedad = response[i].propiedad;
-              
-              var tr_str = "<tr>"+"<td ><input type='checkbox' name='caracteristica' id='opt-in'></td>" +"<td align='center'><input type='text' value='" + nombre + "' class='nombre_"+id+" w-100' id='nombre_"+id+"' ></td>" +
-                "<td align='center'><input type='text' value='" + propiedad + "' class='propiedad_"+id+" w-100' id='propiedad_"+id+"'></td>" +
-                "<td align='center'><input type='button' value='Editar' class='update btn btn-xs w-100 btn-info' data-id='"+id+"' ><input type='button' class='btn btn-xs w-100 btn-danger delete' value='Eliminar  ' data-id='"+id+"' ></td>"+
-                "</tr>";
-
-              $("#userTable tbody").append(tr_str);
-
-            }
-          }else{
-            var tr_str = "<tr class='norecord'>" +
-            "<td align='center' colspan='4'>No record found.</td>" +
-            "</tr>";
-
-            $("#userTable tbody").append(tr_str);
-          }
-
-        }
-      });
-    };
-
  });  
  
 
 </script>
 
 @endsection
+
+

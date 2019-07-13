@@ -37,9 +37,11 @@ class UsersController extends Controller{
     public function store(Request $request){    
        abort_unless(\Gate::allows('user_create'), 403);
         $email=$request->email;
-        $request["email"]= $email."@unexpo.com";
+        $request["user"]=$request->email;
+        $request["email"]= $email."@unexpo.edu.ve";
         $validator = Validator::make($request->all(), [
             'email' => 'email|required|unique:users,email',
+            'user' => 'required|unique:users,user',
             'password' => 'required',
             'role.*' => 'integer|exists:roles,id|required',
             'remember_token' => 'nullable',
@@ -82,12 +84,14 @@ class UsersController extends Controller{
 
         abort_unless(\Gate::allows('user_edit'), 403);
         $email=$request->email;
-        $request["email"]= $email."@unexpo.com";
+        $request["user"]=$request->email;
+        $request["email"]= $email."@unexpo.edu.ve";
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|string',
             'apellido' => 'required|string',
             'cedula' => 'required|unique:users,cedula,'.$user->id,
             'email' => 'required|email|unique:users,email,'.$user->id,
+            'user' => 'required|unique:users,user,'.$user->id,
             'password' => '',
             'role.*' => 'integer|exists:roles,id|mrequired',
             'remember_token' => 'nullable',

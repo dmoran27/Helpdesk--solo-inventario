@@ -24,6 +24,13 @@ class PermissionsTableSeeder extends Seeder
                 'created_at' => '2019-04-15 19:14:42',
                 'updated_at' => '2019-04-15 19:14:42',
             ],
+            [
+                
+                'title'      => 'user_action_access',
+                'nombre'    =>'Acceso a las acciones de los tecnicos',
+                'created_at' => '2019-04-15 19:14:42',
+                'updated_at' => '2019-04-15 19:14:42',
+            ],
              [
                 
                 'title'      => 'configuracion_tecnico_access',

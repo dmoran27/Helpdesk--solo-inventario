@@ -125,16 +125,27 @@
                 <textarea type="text" id="observacion" name="observacion" class="form-control{{ $errors->has('observacion') ? ' is-invalid' : '' }}" value="{{ old('observacion', isset($equipo) ? $equipo->observacion : '') }}">{{ old('observacion', isset($equipo) ? $equipo->observacion : '') }}</textarea> 
                              
             </div>               
-        </div>
-            <div  id="caracteristicas" class="d-none" >
-        @if(isset($equipo->caracteristicas))
-          @foreach($equipo->caracteristicas as $id => $caracteristica) 
-                <input name='caracteristicas[]' value="{{old('caracteristica->id', isset($equipo) ?$caracteristica->id :'')}}" id='input-"{{$caracteristica->id}}"' />
-          @endforeach
-          @endif
-         </div>
-        <div class="table-responsive row">
-             <h5 class="text-center my-5 col-12">CARACTERISTICAS DEL EQUIPO:</h5>
+        </div>               
+        <!--*           Errores         -->
+            @include('partials.widget.errors')
+
+            <!--*      boton de envio   -->
+           <div class="col-12 d-flex justify-content-between">
+                <a class="btn btn-info" href="{{ route("admin.equipos.index") }}">
+                    Volver
+                </a>
+                <input class="btn btn-success" type="submit" value="Actualizar">
+            </div>
+       
+    </div>
+</div>
+<div class="card">
+  <div class="card-header">
+     <h5 class="text-center my-5 col-12">CARACTERISTICAS DEL EQUIPO:</h5>
+  </div>
+  <div class="card-body">
+      <div class="table-responsive row">
+            
             <table class=" table table-bordered table-striped table-hover  col-12" id='userTable'>
                 <thead>
                     <tr> 
@@ -196,19 +207,9 @@
                   
                 </tbody>
             </table>
-        </div>         
-        <!--*           Errores         -->
-            @include('partials.widget.errors')
+        </div>
+  </div>
 
-            <!--*      boton de envio   -->
-           <div class="col-12 d-flex justify-content-between">
-                <a class="btn btn-info" href="{{ route("admin.equipos.index") }}">
-                    Volver
-                </a>
-                <input class="btn btn-success" type="submit" value="Guardar">
-            </div>
-       
-    </div>
 </div>
 @endsection
 
@@ -218,20 +219,18 @@
 
     <script type='text/javascript'>
    
-$(document).ready(function(){  
-      // Fetch records
-      //fetchRecords();
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
       // Add record
     $('#add').click(function(){
         var nombre = $("#nombre").val();
         var propiedad = $('#propiedad').val();
+        var equipo= {{$equipo->id}}
         if(nombre != '' && propiedad != '' ){             
             $.ajax({
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},    
-                url: '{{ route("admin.caracteristicas.store") }}',
+                url: '{{ route("admin.equipo.caracteristica.store") }}',
                 type: 'POST',
-                data: {nombre:nombre, propiedad:propiedad},
+                data: {nombre:nombre, propiedad:propiedad, equipo:equipo},
                 
             }).done(function(data){
                 if(data > 0){
@@ -269,33 +268,10 @@ $(document).ready(function(){
 
     });
 
-    /* Update record
-    $(document).on("click", ".update" , function() {
-      var edit_id = $(this).data('id');
-      var nombre = $('#nombre_'+edit_id).val();
-      var propiedad = $('#propiedad_'+edit_id).val();
-
-      if(nombre != '' && propiedad != ''){
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-          url: '{{URL::to("/admin/caracteristicas/")}}/'+ edit_id,
-          type: 'put',
-          data: {_token: CSRF_TOKEN,nombre: nombre,propiedad: propiedad},
-          }).done(function(response){
-            alert(response);
-          }).fail(function(response){
-            alert("fatal");
-          })
-      }else{
-        alert('Fill all fields');
-      }
-    });/**/
-
-    // Delete record
+    
  $(document).on("click", ".delete" , function() {
       var delete_id = $(this).data('id');
+      var equipo= {{$equipo->id}};
       var el = this;
     swal({
       title: "Esta Seguro de Eliminar este elemento?",
@@ -317,67 +293,22 @@ $(document).ready(function(){
                 headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                url: '{{URL::to("/admin/caracteristicas/")}}/'+ delete_id,
-                type: 'delete'
+                url: '{{ route("admin.equipo.caracteristica.delete") }}',
+                type: 'DELETE',
+                data: {_token: CSRF_TOKEN, equipo:equipo, caracteristica:delete_id}
+                
             })
                 .done( function(response){
+                    console.log(response);
                     swal("Felicidades!", "Elemento Eliminado correctamente!", "success");
                     $(el).closest( "tr" ).remove();
                     $('#caracteristicas #input-'+delete_id).remove();
-                
+                }).fail(function(response){console.log(response);
+            
                  });
         } 
     });
-});
-
-
-    // Fetch records
-    function fetchRecords(){
-     $.ajaxSetup({
-                  headers: {
-                      'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                  }
-              });
-        $.ajax({
-        url: '{{ route("admin.caracteristicas.index") }}',
-        method: 'GET',
-        dataType: 'json',
-        success: function(response){
-         
-
-          var len = 0;
-          $('#userTable tbody tr:not(:first)').empty(); // Empty <tbody>
-          if(response!= null){
-            len = response.length;
-          }
-          if(len > 0){
-            for(var i=0; i<len; i++){
-
-              var id = response[i].id;
-              var nombre = response[i].nombre;
-              var propiedad = response[i].propiedad;
-              
-              var tr_str = "<tr>"+"<td ><input type='checkbox' name='caracteristica' id='opt-in'></td>" +"<td align='center'><input type='text' value='" + nombre + "' class='nombre_"+id+" w-100' id='nombre_"+id+"' ></td>" +
-                "<td align='center'><input type='text' value='" + propiedad + "' class='propiedad_"+id+" w-100' id='propiedad_"+id+"'></td>" +
-                "<td align='center'><input type='button' value='Editar' class='update btn btn-xs w-100 btn-info' data-id='"+id+"' ><input type='button' class='btn btn-xs w-100 btn-danger delete' value='Eliminar  ' data-id='"+id+"' ></td>"+
-                "</tr>";
-
-              $("#userTable tbody").append(tr_str);
-
-            }
-          }else{
-            var tr_str = "<tr class='norecord'>" +
-            "<td align='center' colspan='4'>No record found.</td>" +
-            "</tr>";
-
-            $("#userTable tbody").append(tr_str);
-          }
-
-        }
-      });
-    }
-   
- });
+  });  
 
 </script>
 

@@ -22,6 +22,7 @@ class User extends Authenticatable
     protected $sexo = ['Femenino', 'Masculino'];
     protected $fillable = [
            'nombre',
+           'user',
            'apellido',
            'cedula',
            'telefono',

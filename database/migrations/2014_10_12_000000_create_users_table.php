@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->unsignedInteger('area_id');  
             $table->foreign('area_id')->references('id')->on('areas');
             $table->string('email')->unique();
+            $table->string('user')->unique();
             $table->string('password');
             $table->datetime('email_verified_at')->nullable();
             $table->rememberToken()->nullable();;

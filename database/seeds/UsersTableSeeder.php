@@ -8,7 +8,7 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
        
-         factory(App\User::class,10)->create();
+        // factory(App\User::class,10)->create();
         $users = [
             
             [ 'nombre'=> 'Diana',
@@ -17,7 +17,8 @@ class UsersTableSeeder extends Seeder
                     'telefono'=> '123456',
                     'sexo'=> 'Femenino',
                     'area_id'=> 1,                     
-                    'email'=>'dianacmoran27@gmail.com',
+                    'email'=>'admin123@unexpo.edu.ve',
+                    'user'=>'admin123',
                     'password'=>bcrypt('123123'),
                     'remember_token' => str_random(10),
                     'created_at'     => '2019-04-15 19:13:32',

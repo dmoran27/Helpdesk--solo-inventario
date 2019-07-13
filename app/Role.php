@@ -26,7 +26,7 @@ public static function boot()
     {
         parent::boot();
 
-        User::observe(new \App\Observers\UserActionsObserver);
+        Role::observe(new \App\Observers\UserActionsObserver);
     }
     
  public static function storeValidation($request)

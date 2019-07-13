@@ -18,7 +18,7 @@
             @csrf
             <div class="form-group {{ $errors->has('nombre') ? 'has-error' : '' }}">
                 <label for="nombre">Nombre*</label>
-                <input type="text" id="nombre" name="nombre" class="validarletras form-control{{ $errors->has('nombre') ? ' is-invalid' : '' }}" value="{{ old('nombre') }}">           
+                <input type="text" id="nombre" name="nombre" class=" form-control{{ $errors->has('nombre') ? ' is-invalid' : '' }}" value="{{ old('nombre') }}">           
             </div>
 
             <div class="form-group {{ $errors->has('descripcion') ? 'has-error' : '' }}">

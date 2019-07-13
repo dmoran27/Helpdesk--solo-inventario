@@ -32,10 +32,13 @@ class EquipoController extends Controller{
     public function create(){
         $caracteristicas = Caracteristica::all();
         $softwares = Software::all();
+        $equipos = Equipo::all();
         $tipos=Tipo::All()->where('tipo', 'Equipo');
          $enumoption = General::getEnumValues('equipos','perteneciente'); 
         $enumoption2 = General::getEnumValues('equipos','estado_equipo');  
-        $perifericos = Periferico::all();     
+        $perifericos = Periferico::where([['estado', '!=', 'Dañado'], ['estado', '!
+            =', 'Obsoleto']]);
+
         $dependencias = Dependencia::All();
         abort_unless(\Gate::allows('equipo_create'), 403);
         return view('admin.equipos.create', compact( 'caracteristicas','dependencias', 'enumoption','softwares', 'tipos','enumoption2','perifericos'));
@@ -62,10 +65,6 @@ class EquipoController extends Controller{
             }
         
         $equipo = Equipo::create($request->all());
-    if($request->input('caracteristicas', [])){
-        $equipo->caracteristicas()->attach($request->input('caracteristicas', []));
-       
-    }
     if ($request->input('perifericos', [])) {
         $equipo->perifericos()->attach($request->input('perifericos', []));
        
@@ -74,9 +73,8 @@ class EquipoController extends Controller{
        $equipo->softwares()->attach($request->input('softwares', []));
        
     }    
-        $equipos = Equipo::all();
-         $notificacion = 'Equipo agregado con exito';
-        return view('admin.equipos.index', compact('equipos','notificacion' ));
+        
+        return redirect()->route('admin.equipos.edit', $equipo);
     }
 
     public function edit(Equipo $equipo){
@@ -109,22 +107,6 @@ class EquipoController extends Controller{
                         ->withErrors($validator)
                         ->withInput();
             }
-       $array1=$equipo->caracteristicas()->get();
-        $array2=$request->input('caracteristicas', []);
-        foreach ($array1 as $value1) {
-            $encontrado=false;
-            foreach ($array2 as $value2) {
-                if ($value1 == $value2){
-                    $encontrado=true;
-                    $break;
-                }
-            }
-            if ($encontrado == false){
-               $equipo = Equipo::findOrFail($equipo->id);
-               $caracteristica_id = $value1;
-                $equipo->caracteristicas()->detach($equipo->id);  
-            }
-        }
         $array11=$equipo->perifericos()->get();
         $array22=$request->input('perifericos', []);
         foreach ($array11 as $value11) {
@@ -138,7 +120,7 @@ class EquipoController extends Controller{
             if ($encontrado == false){
                $equipo = Equipo::findOrFail($equipo->id);
                $perifericos_id = $value11;
-                $equipo->perifericos()->detach($equipo->id);  
+                $equipo->perifericos()->detach($equipo);  
             }
         }
         $array111=$equipo->softwares()->get();
@@ -154,16 +136,11 @@ class EquipoController extends Controller{
             if ($encontrado == false){
                $equipo = Equipo::findOrFail($equipo->id);
                $softwares_id = $value111;
-                $equipo->softwares()->detach($equipo->id);  
+                $equipo->softwares()->detach($equipo);  
             }
         }
          Equipo::findOrFail($equipo->id)->update($request->all());
         $equipo->update($request->all());
-    if($request->input('caracteristicas', [])){
-           
-        $equipo->caracteristicas()->sync($request->input('caracteristicas', []));
-       
-    }
     if ($request->input('perifericos', [])) {
        
         $equipo->perifericos()->sync($request->input('perifericos', []));
@@ -196,5 +173,33 @@ class EquipoController extends Controller{
         $equipos = Equipo::all();
         $notificacion = 'Equipos Esliminados con  exito';
         return view('admin.equipos.index', compact('equipos','notificacion' ));
+    }
+
+    public function caracteristicaCreate(Request $request){
+        
+        abort_unless(\Gate::allows('caracteristica_create'), 403);
+        $request["user_id"]=auth()->user()->id;
+        $validator = Validator::make($request->all(), [
+            'nombre' => 'required|string',
+            'propiedad' => 'required|string',
+         ]);
+        if ($validator->fails()) {            
+           return  response()->json("fatal");
+        }           
+
+        $caracteristica = Caracteristica::create($request->all());
+        $caracteristica->equipos()->sync($request->equipo);
+        $caracteristica->load('equipos');
+        return response()->json($caracteristica->id);        
+    }
+
+    public function caracteristicaDelete(Request $request){
+       
+        $id= $request->caracteristica;
+        $caracteristica = Caracteristica::findOrFail($id);
+        $equipo= $request->equipo;      
+        $caracteristica->equipos()->detach($equipo);
+
+       
     }
 }

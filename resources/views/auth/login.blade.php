@@ -27,11 +27,11 @@
                             <i class="fa fa-user pull-left"></i>
                         </div>
                         
-                            <input id="cedula" type="text" class="w-100 form-control{{ $errors->has('cedula') ? ' is-invalid' : '' }}" name="cedula"  placeholder="Cedula" value="{{ old('cedula') }}" required autofocus>
+                            <input id="user" type="text" class="w-100 form-control{{ $errors->has('user') ? ' is-invalid' : '' }}" name="user"  placeholder="user" value="{{ old('user') }}" required autofocus>
 
-                            @if ($errors->has('cedula'))
+                            @if ($errors->has('user'))
                                 <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('cedula') }}</strong>
+                                    <strong>{{ $errors->first('user') }}</strong>
                                 </span>
                             @endif
                        
@@ -52,7 +52,7 @@
                             @endif
                        
                     </div>
-
+{{--
                     <div class="form-group col-12">
                         
                             <div class="form-check">
@@ -64,7 +64,7 @@
                             </div>
                         
                     </div>
-
+--}}
                     <div class="form-group col-12 mb-0">
                        
                             <button type="submit" class="btn">

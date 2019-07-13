@@ -27,13 +27,16 @@ class Software extends Model
     }
 //relacion entre las tablas en la base de datos
 
-public function tipo()
+    public function tipo()
     {
         return $this->BelongsTo(Tipo::class, 'tipo_id');
     }
-       public function ticketSoftwares()
+    public function ticketSoftwares()
     {
         return $this->BelongsToMany(TicketSoftware::class);
+    }
+    public function equipos(){
+        return $this->BelongsToMany(Equipo::class);
     }
 }
 

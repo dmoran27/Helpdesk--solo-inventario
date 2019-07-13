@@ -12,79 +12,77 @@ use App\Dependencia;
 
 class TicketController extends Controller{ 
 
-    public function index(){        
-       
-    }
-
-     public function show(Tipo $tipo){
-        abort_unless(\Gate::allows('tipo_show'), 403);
-        return view('admin.tipos.show', compact('tipo'));
-    }
-
-    public function create(){
-        $enumoption2 = General::getEnumValues('tipos','tipo');
-        abort_unless(\Gate::allows('tipo_create'), 403);
-        return view('admin.tipos.create', compact('enumoption2'));
-    }
-
     public function store(Request $request){
-        abort_unless(\Gate::allows('tipo_create'), 403);
-        $request["user_id"]=auth()->user()->id;
+        $request["user_id_creador"]=auth()->user()->id;
+        if (!$request["user_id_asignado"]) {
+            $request["user_id_asignado"]=auth()->user()->id;
+        }
+
+
         $validator = Validator::make($request->all(), [
-            'nombre' => 'required|string|max:255',
-            'descripcion' => 'required|string|max:255',
-            'tipo' => 'required',
             'user_id'=> 'required',
+            'identificador'=> 'required|unique:tickets,identificador',
+            'tipo_id'=> 'required',
+            'estado'=> 'required',
+            'accion'=> 'required',
+            'prioridad'=> 'required',
+            'observacion'=> 'nullable',
+            'tiempo_i'=> 'nullable',
+            'tiempo_c'=> 'nullable',
+            'user_id_creador'=> 'required',
+            'user_id_asignado'=> 'required',
+            'lugar'=> 'nullable',
+            'traslado_servicio'=> 'required',
+            'traslado_ticket'=> 'required',
+            'cod_traslado'=> 'required',
+            'cliente_id'=> 'required',
         ]);
-        if ($validator->fails()) {
-            
-           return redirect()
-                        ->route('admin.tipos.create')
-                        ->withErrors($validator)
-                        ->withInput();
-            }
-        
-        $tipo = Tipo::create($request->all());
-        $tipos = Tipo::all();
-        $notificacion = array(
-            'message' => 'tipos agregados con exito.', 
-            'alert-type' => 'success'
-        );
-        return view('admin.tipos.index', compact('tipos', 'notificacion'));
+        if (!$request["traslado_servicio"]) {
+            $request["traslado_servicio"]=$request["identificador"];
+        }
+        if ($validator->fails()) {    
+            return  response()->json($validator);
+        }
+        $ticket = Ticket::create($request->all());
+         return  response()->json($ticket->id);
+
+
     }
 
-    public function edit(Tipo $tipo){
+    public function update(Request $request, Ticket $ticket){
+        $request["user_id_creador"]=auth()->user()->id;
+        if (!$request["user_id_asignado"]) {
+            $request["user_id_asignado"]=auth()->user()->id;
+        }
+        if (!$request["traslado_servicio"]) {
+            $request["traslado_servicio"]=$request["identificador"];
+        }
+
+
+        $validator = Validator::make($request->all(), [
+            'user_id'=> 'required',
+            'identificador'=> 'required|unique:tickets,identificador,'.$ticket->id,
+            'tipo_id'=> 'required',
+            'estado'=> 'required',
+            'accion'=> 'required',
+            'prioridad'=> 'required',
+            'observacion'=> 'nullable',
+            'tiempo_i'=> 'nullable',
+            'tiempo_c'=> 'nullable',
+            'user_id_creador'=> 'required',
+            'user_id_asignado'=> 'required',
+            'lugar'=> 'nullable',
+            'traslado_servicio'=> 'required',
+            'traslado_ticket'=> 'required',
+            'cod_traslado'=> 'required',
+            'cliente_id'=> 'required',
+        ]);
+        if ($validator->fails()) {    
+            return  response()->json($validator);
+        }
        
-         $enumoption2 = General::getEnumValues('tipos','tipo');
-        abort_unless(\Gate::allows('tipo_edit'), 403);      
-        return view('admin.tipos.edit', compact('enumoption2', 'tipo'));
-    }
-
-    public function update(Request $request, Tipo $tipo){
-        abort_unless(\Gate::allows('tipo_edit'), 403); 
-         $request["user_id"]=auth()->user()->id;
-        $validator = Validator::make($request->all(), [
-             'nombre' => 'required|string|max:255',
-            'descripcion' => 'required|string|max:255',
-            'tipo' => 'required',
-            'user_id'=> 'required',
-        ]);
-
-         if ($validator->fails()) {
-            
-           return redirect()
-                        ->route('admin.tipos.edit', $user)
-                        ->withErrors($validator)
-                        ->withInput();
-            }  
-        
-        $tipo->update($request->all());
-        $tipos = Tipo::all();
-        $notificacion = array(
-            'message' => 'Usuario creado con exito.', 
-            'alert-type' => 'success'
-        );
-        return view('admin.tipos.index', compact('tipos', 'notificacion'));
+        $ticket->update($request->all());
+         return  response()->json($ticket->id);
     }
 
    

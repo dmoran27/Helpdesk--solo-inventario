@@ -93,7 +93,7 @@
                 <div class="input-group">
                     <input type="text" id="email" required="" name="email"  required  class="validaremail form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" 
                     value="{{$email[0]}}" aria-describedby="basic-addon2">
-                    <span class="input-group-text"  id="basic-addon2">{{_('@unexpo.com')}}</span>
+                    <span class="input-group-text"  id="basic-addon2">{{_('@unexpo.edu.ve')}}</span>
                   </div>
                             
             </div>

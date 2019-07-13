@@ -14,9 +14,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     /********************************************************Inventario*/
     Route::delete('softwares/destroy', 'SoftwareController@massDestroy')->name('softwares.massDestroy');
 
-     Route::resource('softwares', 'SoftwareController');
+    Route::resource('softwares', 'SoftwareController');
     
-     Route::delete('perifericos/destroy', 'PerifericoController@massDestroy')->name('perifericos.massDestroy');
+    Route::delete('perifericos/destroy', 'PerifericoController@massDestroy')->name('perifericos.massDestroy');
+
+    Route::delete('perifericos/caracteristicasdelete', 'PerifericoController@caracteristicaDelete')->name('periferico.caracteristica.delete');
+
+    Route::post('perifericos/caracteristicascreate', 'PerifericoController@caracteristicaCreate')->name('periferico.caracteristica.store');
+
 
      Route::resource('perifericos', 'PerifericoController');
     
@@ -26,7 +31,19 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     
      Route::delete('equipos/destroy', 'EquipoController@massDestroy')->name('equipos.massDestroy');
 
+     Route::delete('equipos/caracteristicasdelete', 'EquipoController@caracteristicaDelete')->name('equipo.caracteristica.delete');
+    
+
+    Route::post('equipos/caracteristicascreate', 'EquipoController@caracteristicaCreate')->name('equipo.caracteristica.store');
+    
      Route::resource('equipos', 'EquipoController');
+
+     /********************************************************Inventario Pivot*/
+  
+
+    
+    
+
     
 
      /********************************************Gestion de usuarios*/
@@ -76,7 +93,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
 
 
-
+ /***********************************************Ticket*/
+    Route::get('useractions', 'UserActionsController@index')->name('useractions.index');
 
 
 

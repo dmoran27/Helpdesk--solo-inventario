@@ -11,10 +11,10 @@ class UserActionsObserver
     {
         if ($model->wasRecentlyCreated == true) {
             // Data was just created
-            $action = 'created';
+            $action = 'Crear';
         } else {
             // Data was updated
-            $action = 'updated';
+            $action = 'Actualizar';
         }
         if (Auth::check()) {
             UserAction::create([
@@ -32,7 +32,7 @@ class UserActionsObserver
         if (Auth::check()) {
             UserAction::create([
                 'user_id'      => Auth::user()->id,
-                'action'       => 'deleted',
+                'action'       => 'Eliminar',
                 'action_model' => $model->getTable(),
                 'action_id'    => $model->id
             ]);
